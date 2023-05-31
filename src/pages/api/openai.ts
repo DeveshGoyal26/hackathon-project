@@ -4,9 +4,11 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 import { Configuration, OpenAIApi } from "openai";
 
+// This is the real api
+
 const configuration = new Configuration({
-  organization: "org-vaeLNbS1FdlSwFHPnavineId",
-  apiKey: "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",
+  organization: process.env.NEXT_PUBLIC_OPENAI_API_ORGANIZATION_KEY,
+  apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
 });
 
 const openai = new OpenAIApi(configuration);
@@ -22,40 +24,23 @@ export default async function handler(
 ) {
   if (req.method === "POST") {
     const data = req.body;
-    console.log("data:", data);
 
     try {
-      //   const response = await axios.post(
-      //     "https://api.openai.com/v1/engines/davinci/completions",
-      //     {
-      //       prompt: "Say this is a test",
-      //       max_tokens: 7,
-      //       temperature: 0,
-      //     },
-      //     {
-      //       headers: {
-      //         Authorization:
-      //           "Bearer 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",
-      //         "Content-Type": "application/json",
-      //       },
-      //     }
-      //   );
-
       const response = await openai.createCompletion({
         model: "text-davinci-003",
-        prompt: "Say this is a test",
+        prompt: data.prompt,
         max_tokens: 7,
         temperature: 0,
       });
 
-      console.log("response:", response.data);
+      // console.log("response:", response.data);
 
       res.status(200).json({ message: response.data.choices[0].text });
     } catch (error) {
-      const err = axiosErrorHandler(error);
-      console.log("err:", err);
+      const err: any = axiosErrorHandler(error);
+
       if (err?.error?.message) {
-        res.status(500).json({ error: err.error.message });
+        res.status(500).json({ error: err?.error?.message });
       } else {
         res.status(500).json({ error: "An error occurred" });
       }

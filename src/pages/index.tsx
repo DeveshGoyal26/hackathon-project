@@ -10,13 +10,18 @@ const Index = () => {
   const handleSubmit = async (event: any) => {
     event.preventDefault();
     const formData = new FormData(event.target);
-    const name = formData.get("name");
+    const prompt = formData.get("prompt");
 
     try {
-      const res = await axios.post("http://localhost:3000/api/openai", {
-        name,
-      });
-
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL?.replace(
+          /\/?$/,
+          ""
+        )}/openai`,
+        {
+          prompt,
+        }
+      );
       let data = res.data;
       console.log("data.message:", data.message);
       setResponse(data.message);
@@ -38,7 +43,7 @@ const Index = () => {
         >
           <textarea
             placeholder="Type your query"
-            name="name"
+            name="prompt"
             className="p-[8px] rounded-md h-[200px] w-[500px] border border-transparent transition-colors hover:border-gray-300"
           />
 
@@ -64,7 +69,7 @@ const Index = () => {
 
       <a
         href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-        className="w-full group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
+        className="max-w-[1440px] w-full group rounded-lg border border-transparent px-5 py-4 transition-colors border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
         target="_blank"
         rel="noopener noreferrer"
       >
