@@ -1,8 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Inter } from "next/font/google";
 import axios from "axios";
 import PromptInput from "@/components/PromptInput";
 import Query from "@/components/Query";
+import { axiosErrorHandler } from "@/util/error";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,10 +18,7 @@ const Index = () => {
     setIsLoading(true);
     try {
       const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL?.replace(
-          /\/?$/,
-          ""
-        )}/openai`,
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL?.replace(/\/?$/, "")}/chat`,
         {
           userData,
           prompt,
@@ -29,11 +27,12 @@ const Index = () => {
 
       let data = res.data;
 
-      localStorage.setItem("userData", JSON.stringify([...data]));
+      localStorage.setItem("userData", JSON.stringify([...data.conversation]));
       setResponse(data);
-      setUserData([...data]);
+      setUserData([...data.conversation]);
     } catch (error) {
-      console.error("Error:", error);
+      const err: any = axiosErrorHandler(error);
+      console.log("err:", err);
     } finally {
       setIsLoading(false);
     }
@@ -87,18 +86,20 @@ const Index = () => {
       </div>
 
       <div className="overflow-y-auto">
-        {userData &&
-          userData.length > 0 &&
-          userData.map((item: any, index: number) => {
-            return (
-              <Query
-                key={index}
-                {...item}
-                queryIndex={index}
-                typeEffect={index === userData.length - 1}
-              />
-            );
-          })}
+        <div className=" min-h-screen">
+          {userData &&
+            userData.length > 0 &&
+            userData.map((item: any, index: number) => {
+              return (
+                <Query
+                  key={index}
+                  {...item}
+                  queryIndex={index}
+                  typeEffect={index === userData.length - 1}
+                />
+              );
+            })}
+        </div>
 
         <PromptInput
           prompt={prompt}

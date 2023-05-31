@@ -3,11 +3,12 @@ import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import remarkGfm from "remark-gfm";
 
 const Query = ({
-  prompt,
-  response,
+  role,
+  content,
   typeEffect,
   queryIndex,
 }: {
+  role: string;
   prompt: string;
   response: string;
   queryIndex: number;
@@ -54,26 +55,28 @@ const Query = ({
 
   return (
     <div className="flex flex-col">
-      <div className="bg-[#f3f3f3] dark:bg-[#242424]">
-        <div className="flex items-start gap-[1.5rem] py-[30px] max-w-[900px] mx-auto px-[16px]">
-          <div className="w-[30px] sticky top-[100px]">You</div>
-          <div className="w-[calc(100% - 50px)]">{prompt}</div>
+      {role === "user" ? (
+        <div className="bg-[#f3f3f3] dark:bg-[#242424]">
+          <div className="flex items-start gap-[1.5rem] py-[30px] max-w-[900px] mx-auto px-[16px]">
+            <div className="w-[30px] sticky top-[100px]">You</div>
+            <div className="w-[calc(100% - 50px)]">{content}</div>
+          </div>
         </div>
-      </div>
+      ) : (
+        <div>
+          <div className="flex items-start gap-[1.5rem] py-[30px] max-w-[900px] mx-auto px-[16px]">
+            <div className="w-[30px] sticky top-[10px]">Gpt</div>
 
-      <div>
-        <div className="flex items-start gap-[1.5rem] py-[30px] max-w-[900px] mx-auto px-[16px]">
-          <div className="w-[30px] sticky top-[10px]">Gpt</div>
-
-          <ReactMarkdown
-            remarkPlugins={[remarkGfm]}
-            className={`${
-              "typewriter" + queryIndex
-            } w-full prose prose-slatec dark:prose-invert lg:prose-lg break-words`}
-            children={response}
-          ></ReactMarkdown>
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              className={`${
+                "typewriter" + queryIndex
+              } w-full prose prose-slatec dark:prose-invert lg:prose-lg break-words`}
+              children={content}
+            ></ReactMarkdown>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
