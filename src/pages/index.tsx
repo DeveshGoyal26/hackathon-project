@@ -7,8 +7,8 @@ const inter = Inter({ subsets: ["latin"] });
 const Index = () => {
   const formRef = useRef(null);
   const [prompt, setPrompt] = useState("");
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const [response, setResponse] = useState("");
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   const handleSubmit = async () => {
     try {
@@ -22,13 +22,33 @@ const Index = () => {
         }
       );
       let data = res.data;
-      console.log("data.message:", data.message);
       setResponse(data.message);
     } catch (error) {
       console.error("Error:", error);
     }
   };
 
+  useEffect(() => {
+    let root: any = document.querySelector(":root");
+
+    if (localStorage.getItem("isDarkTheme") === "true") {
+      root.style.setProperty("--theme-color-scheme", "dark");
+      setIsDarkMode(true);
+    } else if (localStorage.getItem("isDarkTheme") === "false") {
+      root.style.setProperty("--theme-color-scheme", "light");
+      setIsDarkMode(false);
+    } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+      root.style.setProperty("--theme-color-scheme", "dark");
+      localStorage.setItem("isDarkTheme", "true");
+      setIsDarkMode(true);
+    }
+
+    if (response) {
+      type();
+    }
+  }, [response]);
+
+  // Typewriter effect start
   let index = 0;
   let timer: any = null;
 
@@ -36,7 +56,6 @@ const Index = () => {
     clearTimeout(timer);
 
     const typewriter: any = document.getElementById("typewriter");
-    console.log("response:", response);
 
     if (index < response.length) {
       typewriter.innerHTML =
@@ -47,16 +66,7 @@ const Index = () => {
       typewriter.innerHTML = response.slice(0, index);
     }
   };
-
-  useEffect(() => {
-    if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-      setIsDarkMode(true);
-    }
-
-    if (response) {
-      type();
-    }
-  }, [response]);
+  // Typewriter effect end
 
   return (
     <main
@@ -68,8 +78,10 @@ const Index = () => {
           onClick={() => {
             let root: any = document.querySelector(":root");
             if (isDarkMode) {
+              localStorage.setItem("isDarkTheme", "false");
               root.style.setProperty("--theme-color-scheme", "light");
             } else {
+              localStorage.setItem("isDarkTheme", "true");
               root.style.setProperty("--theme-color-scheme", "dark");
             }
             setIsDarkMode(!isDarkMode);
@@ -108,14 +120,23 @@ const Index = () => {
             name="prompt"
             placeholder="Type your prompt here..."
             onChange={(e) => {
-              setPrompt(e.target.value);
+              if (e.target.value.length > 0) {
+                setPrompt(e.target.value);
+              }
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && prompt.length > 0) {
+                e.preventDefault();
+                handleSubmit();
+              }
             }}
             className="p-[1rem] min-h-[58px] rounded-md w-full md:w-[500px] border transition-colors hover:border-gray-300"
           />
 
           <button
             type="submit"
-            className="!bg-[black] dark:bg-inherit min-h-[58px] relative inline-flex items-center justify-center px-6 py-3 overflow-hidden font-bold text-white rounded-md shadow-2xl group"
+            disabled={prompt.length === 0}
+            className="disabled:opacity-50 !bg-[black] dark:bg-transparent min-h-[58px] relative inline-flex items-center justify-center px-6 py-3 overflow-hidden font-bold text-white rounded-md shadow-2xl group"
           >
             <span className="absolute inset-0 w-full h-full transition duration-300 ease-out opacity-0 bg-gradient-to-br from-pink-600 via-purple-700 to-blue-400 group-hover:opacity-100"></span>
             {/* <!-- Top glass gradient --> */}
