@@ -32,6 +32,7 @@ const Index = () => {
     <main
       className={`flex min-h-screen flex-col gap-[24px]  p-24 ${inter.className}`}
     >
+      
       <h1 className="text-6xl text-center">Test</h1>
 
       <div className="text-center">
@@ -82,9 +83,9 @@ const Index = () => {
             -&gt;
           </span> */}
       </h2>
-      <div className="min-h-screen max-w-[1440px] w-full group rounded-lg border px-5 py-4 transition-colors border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30">
-        {response && <p className={`m-0 max-w-[30ch] text-md`}>{response}</p>}
-      </div>
+      {/* <div className="min-h-screen max-w-[1440px] w-full group rounded-lg border px-5 py-4 transition-colors border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"> */}
+        {response && <p className={`prose lg:prose-xl`}>{response}</p>}
+      {/* </div> */}
     </main>
   );
 };
