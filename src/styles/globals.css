@@ -24,8 +24,6 @@ html {
 }
 
 .gradient-text {
-  font-size: 72px;
-  font-weight: 800;
   background: linear-gradient(45deg, var(--theme-gradient-heat));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;

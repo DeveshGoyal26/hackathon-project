@@ -13,14 +13,9 @@ const configuration = new Configuration({
 
 const openai = new OpenAIApi(configuration);
 
-type Data = {
-  message?: string;
-  error?: string;
-};
-
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Data>
+  res: NextApiResponse<any>
 ) {
   if (req.method === "POST") {
     const data = req.body;
@@ -35,7 +30,28 @@ export default async function handler(
 
       // console.log("response:", response.data);
 
-      res.status(200).json({ message: response.data.choices[0].text });
+      const userData: any = localStorage.getItem("userData") || [];
+
+      localStorage.setItem(
+        "userData",
+        JSON.stringify([
+          ...userData,
+          {
+            prompt: data.prompt,
+            createdAt: new Date(),
+            response: response.data.choices[0].text,
+          },
+        ])
+      );
+
+      res.status(200).json([
+        ...userData,
+        {
+          prompt: data.prompt,
+          createdAt: new Date(),
+          response: response.data.choices[0].text,
+        },
+      ]);
     } catch (error) {
       const err: any = axiosErrorHandler(error);
 
