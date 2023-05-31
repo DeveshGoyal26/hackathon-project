@@ -1,17 +1,15 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Inter } from "next/font/google";
 import axios from "axios";
 
 const inter = Inter({ subsets: ["latin"] });
 
 const Index = () => {
+  const formRef = useRef(null);
   const [response, setResponse] = useState("");
+  const [prompt, setPrompt] = useState("");
 
-  const handleSubmit = async (event: any) => {
-    event.preventDefault();
-    const formData = new FormData(event.target);
-    const prompt = formData.get("prompt");
-
+  const handleSubmit = async () => {
     try {
       const res = await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL?.replace(
@@ -32,17 +30,28 @@ const Index = () => {
 
   return (
     <main
-      className={`flex min-h-screen flex-col items-center justify-between p-24 ${inter.className}`}
+      className={`flex min-h-screen flex-col gap-[24px]  p-24 ${inter.className}`}
     >
-      <h1 className="text-6xl">Test</h1>
+      <h1 className="text-6xl text-center">Test</h1>
 
-      <div>
+      <div className="text-center">
         <form
+          ref={formRef}
+          id="form"
           onSubmit={handleSubmit}
           className="flex items-center justify-start flex-col gap-[16px]"
         >
           <textarea
-            placeholder="Type your query"
+            placeholder="Type your prompt here..."
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                handleSubmit();
+              }
+            }}
+            onChange={(e) => {
+              setPrompt(e.target.value);
+            }}
             name="prompt"
             className="p-[8px] rounded-md h-[200px] w-[500px] border border-transparent transition-colors hover:border-gray-300"
           />
@@ -67,22 +76,15 @@ const Index = () => {
         </form>
       </div>
 
-      <a
-        href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-        className="max-w-[1440px] w-full group rounded-lg border border-transparent px-5 py-4 transition-colors border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <h2 className={`mb-3 text-2xl font-semibold`}>
-          Response{" "}
-          <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
+      <h2 className={`text-center mb-3 text-2xl font-semibold`}>
+        Response{" "}
+        {/* <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
             -&gt;
-          </span>
-        </h2>
-        {response && (
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>{response}</p>
-        )}
-      </a>
+          </span> */}
+      </h2>
+      <div className="min-h-screen max-w-[1440px] w-full group rounded-lg border px-5 py-4 transition-colors border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30">
+        {response && <p className={`m-0 max-w-[30ch] text-md`}>{response}</p>}
+      </div>
     </main>
   );
 };
