@@ -29,8 +29,8 @@ export default async function handler(
     try {
       const response = await openai.createCompletion({
         model: "text-davinci-003",
-        prompt: data.prompt,
-        max_tokens: 3000,
+        prompt: "Return the answer as a markdown.\n" + data.prompt,
+        max_tokens: 300,
         temperature: 0.5,
       });
 
@@ -45,8 +45,9 @@ export default async function handler(
         },
       ]);
     } catch (error) {
-      console.log("error:", error);
+      // console.log("error:", error);
       const err: any = axiosErrorHandler(error);
+      console.log("err:", err);
 
       if (err?.error?.message) {
         res.status(500).json({ error: err?.error?.message });
