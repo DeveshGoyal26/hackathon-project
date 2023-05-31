@@ -17,6 +17,12 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<any>
 ) {
+  if (typeof window !== "undefined") {
+    const data = localStorage.getItem("userData");
+    // Use the localStorage data as needed
+    console.log(data);
+  }
+
   if (req.method === "POST") {
     const data = req.body;
 
@@ -28,21 +34,7 @@ export default async function handler(
         temperature: 0.5,
       });
 
-      // console.log("response:", response.data);
-
-      const userData: any = localStorage.getItem("userData") || [];
-
-      localStorage.setItem(
-        "userData",
-        JSON.stringify([
-          ...userData,
-          {
-            prompt: data.prompt,
-            createdAt: new Date(),
-            response: response.data.choices[0].text,
-          },
-        ])
-      );
+      const userData: any = data.userData;
 
       res.status(200).json([
         ...userData,
@@ -53,6 +45,7 @@ export default async function handler(
         },
       ]);
     } catch (error) {
+      console.log("error:", error);
       const err: any = axiosErrorHandler(error);
 
       if (err?.error?.message) {
