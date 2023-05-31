@@ -93,20 +93,22 @@ const Index = () => {
 
       <h1 className="gradient-text text-6xl text-center">ChatGpt</h1>
 
-      <div className="min-h-[50vh] lg:max-w-4xl md:max-w-3xl mx-auto w-full group rounded-lg border px-5 py-4 transition-colors hover:dark:border-gray-300 hover:bg-gray-100 border-neutral-700 hover:dark:bg-neutral-800/30">
-        <div
-          id={"typewriter"}
-          className={`prose w-full break-words prose-stone dark:prose-invert mx-auto`}
-        >
-          <h2
-            className={`text-center mb-3 text-2xl font-semibold text-inherit`}
+      <div className="px-[16px]">
+        <div className="min-h-[50vh] lg:max-w-4xl md:max-w-3xl mx-auto w-full group rounded-lg border px-5 py-4 transition-colors hover:dark:border-gray-300 hover:bg-gray-100 border-neutral-700 hover:dark:bg-neutral-800/30">
+          <div
+            id={"typewriter"}
+            className={`prose w-full break-words prose-stone dark:prose-invert mx-auto`}
           >
-            Response
-          </h2>
+            <h2
+              className={`text-center mb-3 text-2xl font-semibold text-inherit`}
+            >
+              Response
+            </h2>
+          </div>
         </div>
       </div>
 
-      <div className="text-center sticky bottom-[0px] pb-[40px] mt-[60px]">
+      <div className="px-[16px] text-center sticky bottom-[0px] pb-[40px] mt-[60px]">
         <form
           ref={formRef}
           id="form"
