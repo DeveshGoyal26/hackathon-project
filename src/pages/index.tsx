@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Inter } from "next/font/google";
 import axios from "axios";
 
@@ -6,8 +6,9 @@ const inter = Inter({ subsets: ["latin"] });
 
 const Index = () => {
   const formRef = useRef(null);
-  const [response, setResponse] = useState("");
   const [prompt, setPrompt] = useState("");
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [response, setResponse] = useState("");
 
   const handleSubmit = async () => {
     try {
@@ -28,38 +29,93 @@ const Index = () => {
     }
   };
 
+  let index = 0;
+  let timer: any = null;
+
+  const type = () => {
+    clearTimeout(timer);
+
+    const typewriter: any = document.getElementById("typewriter");
+    console.log("response:", response);
+
+    if (index < response.length) {
+      typewriter.innerHTML =
+        response.slice(0, index) + '<span className="blinking-cursor">|</span>';
+      index++;
+      timer = setTimeout(type, Math.random() * 150 + 50);
+    } else {
+      typewriter.innerHTML = response.slice(0, index);
+    }
+  };
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+      setIsDarkMode(true);
+    }
+
+    if (response) {
+      type();
+    }
+  }, [response]);
+
   return (
     <main
-      className={`flex min-h-screen flex-col gap-[24px]  p-24 ${inter.className}`}
+      className={`flex min-h-screen flex-col gap-[24px] ${inter.className}`}
     >
-      
-      <h1 className="text-6xl text-center">Test</h1>
+      <div className="sticky top-0 py-[20px] px-[30px] flex items-center justify-end">
+        <button
+          className="p-[16px] border rounded-md border-neutral-700 transition-colors hover:border-gray-300"
+          onClick={() => {
+            let root: any = document.querySelector(":root");
+            if (isDarkMode) {
+              root.style.setProperty("--theme-color-scheme", "light");
+            } else {
+              root.style.setProperty("--theme-color-scheme", "dark");
+            }
+            setIsDarkMode(!isDarkMode);
+          }}
+        >
+          {isDarkMode ? "Light" : "Dark"} Mode
+        </button>
+      </div>
 
-      <div className="text-center">
+      <h1 className="gradient-text text-6xl text-center">ChatGpt</h1>
+
+      <div className="min-h-[50vh] lg:max-w-4xl md:max-w-3xl mx-auto w-full group rounded-lg border px-5 py-4 transition-colors hover:dark:border-gray-300 hover:bg-gray-100 border-neutral-700 hover:dark:bg-neutral-800/30">
+        <div
+          id={"typewriter"}
+          className={`prose w-full break-words prose-stone dark:prose-invert mx-auto`}
+        >
+          <h2
+            className={`text-center mb-3 text-2xl font-semibold text-inherit`}
+          >
+            Response
+          </h2>
+        </div>
+      </div>
+
+      <div className="text-center sticky bottom-[0px] pb-[40px] mt-[60px]">
         <form
           ref={formRef}
           id="form"
-          onSubmit={handleSubmit}
-          className="flex items-center justify-start flex-col gap-[16px]"
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSubmit();
+          }}
+          className="flex items-end justify-center gap-[16px]"
         >
           <textarea
+            name="prompt"
             placeholder="Type your prompt here..."
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                e.preventDefault();
-                handleSubmit();
-              }
-            }}
             onChange={(e) => {
               setPrompt(e.target.value);
             }}
-            name="prompt"
-            className="p-[8px] rounded-md h-[200px] w-[500px] border border-transparent transition-colors hover:border-gray-300"
+            className="p-[1rem] min-h-[58px] rounded-md w-full md:w-[500px] border transition-colors hover:border-gray-300"
           />
 
           <button
             type="submit"
-            className="relative inline-flex items-center justify-center px-6 py-3 overflow-hidden font-bold text-white rounded-md shadow-2xl group"
+            className="!bg-[black] dark:bg-inherit min-h-[58px] relative inline-flex items-center justify-center px-6 py-3 overflow-hidden font-bold text-white rounded-md shadow-2xl group"
           >
             <span className="absolute inset-0 w-full h-full transition duration-300 ease-out opacity-0 bg-gradient-to-br from-pink-600 via-purple-700 to-blue-400 group-hover:opacity-100"></span>
             {/* <!-- Top glass gradient --> */}
@@ -72,20 +128,23 @@ const Index = () => {
             <span className="absolute bottom-0 right-0 w-4 h-full bg-gradient-to-l from-white to-transparent opacity-5"></span>
             <span className="absolute inset-0 w-full h-full border border-white rounded-md opacity-10"></span>
             <span className="absolute w-0 h-0 transition-all duration-300 ease-out bg-white rounded-full group-hover:w-56 group-hover:h-56 opacity-5"></span>
-            <span className="relative">Button Text</span>
+            <span className="relative">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 16 16"
+                fill="none"
+                className="h-4 w-4"
+                strokeWidth="2"
+              >
+                <path
+                  d="M.5 1.163A1 1 0 0 1 1.97.28l12.868 6.837a1 1 0 0 1 0 1.766L1.969 15.72A1 1 0 0 1 .5 14.836V10.33a1 1 0 0 1 .816-.983L8.5 8 1.316 6.653A1 1 0 0 1 .5 5.67V1.163Z"
+                  fill="currentColor"
+                ></path>
+              </svg>
+            </span>
           </button>
         </form>
       </div>
-
-      <h2 className={`text-center mb-3 text-2xl font-semibold`}>
-        Response{" "}
-        {/* <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-            -&gt;
-          </span> */}
-      </h2>
-      {/* <div className="min-h-screen max-w-[1440px] w-full group rounded-lg border px-5 py-4 transition-colors border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"> */}
-        {response && <p className={`prose lg:prose-xl`}>{response}</p>}
-      {/* </div> */}
     </main>
   );
 };

@@ -7,6 +7,7 @@
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
   --theme-gradient-heat: #c20ea1, #dd2d7f, #ee4c5e, #f46d41;
+  --theme-color-scheme: dark light;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -14,17 +15,34 @@
     --foreground-rgb: 255, 255, 255;
     --background-start-rgb: 0, 0, 0;
     --background-end-rgb: 0, 0, 0;
+    --theme-color-scheme: dark light;
   }
 }
 
 html {
-  color-scheme: light dark;
+  color-scheme: var(--theme-color-scheme);
 }
 
-h1 {
+.gradient-text {
   font-size: 72px;
   font-weight: 800;
   background: linear-gradient(45deg, var(--theme-gradient-heat));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+.blinking-cursor {
+  margin-left: 2px;
+  background-color: #fff;
+  animation: blink 1s infinite;
+}
+@keyframes blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  50.1%,
+  100% {
+    opacity: 0;
+  }
 }
