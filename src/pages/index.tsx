@@ -13,21 +13,26 @@ const Index = () => {
   const [userData, setUserData] = useState<any>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [userSlug, setUserSlug] = useState("");
 
   const handleSubmit = async () => {
     setIsLoading(true);
     try {
       const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL?.replace(/\/?$/, "")}/chat`,
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL?.replace(/\/?$/, "")}/user`,
         {
           userData,
           prompt,
+          slug: userSlug,
         }
       );
 
       let data = res.data;
 
-      localStorage.setItem("userData", JSON.stringify([...data.conversation]));
+      if (!userSlug) {
+        localStorage.setItem("userSlug", JSON.stringify(data.slug));
+        setUserSlug(data.slug);
+      }
       setResponse(data);
       setUserData([...data.conversation]);
     } catch (error) {
@@ -35,6 +40,33 @@ const Index = () => {
       console.log("err:", err);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const getUserData = async (slug: string) => {
+    try {
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL?.replace(
+          /\/?$/,
+          ""
+        )}/getUserData`,
+        {
+          slug: slug ? slug : "",
+        }
+      );
+
+      let data = res.data;
+
+      if (!userSlug) {
+        localStorage.setItem("userSlug", data.slug);
+        setUserSlug(data.slug);
+      }
+
+      setResponse(data);
+      setUserData([...data.conversation]);
+    } catch (error) {
+      const err: any = axiosErrorHandler(error);
+      console.log("err:", err);
     }
   };
 
@@ -53,11 +85,20 @@ const Index = () => {
     }
 
     const localdata: any = localStorage.getItem("userData") || null;
+    const userSlug = localStorage.getItem("userSlug");
+    console.log("userSlug:", userSlug);
+
+    if (userSlug) {
+      setUserSlug(userSlug);
+      getUserData(userSlug);
+    } else {
+      getUserData("");
+    }
 
     if (localdata) {
       setUserData(JSON.parse(localdata));
     }
-  }, [response]);
+  }, []);
 
   return (
     <main
