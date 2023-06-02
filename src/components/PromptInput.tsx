@@ -10,11 +10,11 @@ const PromptInput = ({
   return (
     <div
       className="px-[16px] text-center sticky bottom-[0px] pb-[40px] mt-[60px]"
-      // style={{
-      //   background: `linear-gradient(180deg,rgba(53,55,64,0),${
-      //     isDarkMode ? "#121212" : "#f0efef"
-      //   } 58.85%)`,
-      // }}
+      style={{
+        background: `linear-gradient(180deg,rgba(53,55,64,0),${
+          isDarkMode ? "#121212" : "#f0efef"
+        } 58.85%)`,
+      }}
     >
       <form
         onSubmit={(e) => {

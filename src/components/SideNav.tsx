@@ -18,7 +18,7 @@ const SignupSchema = Yup.object().shape({
   CurriculumPlan: Yup.string().required("Required"),
 });
 
-const SideNav = ({ setUserData }: any) => {
+const SideNav = ({ setUserData, setIsLoading }: any) => {
   const courseFor = {
     label: "Who is the course for?",
     chips: [
@@ -80,6 +80,7 @@ const SideNav = ({ setUserData }: any) => {
         }}
         validationSchema={SignupSchema}
         onSubmit={async (values) => {
+          setIsLoading(true);
           // same shape as initial values
           console.log(values);
 
@@ -87,10 +88,20 @@ const SideNav = ({ setUserData }: any) => {
             values?.CurriculumPlan;
           }
 
+          // {
+          //   CourseSubject: "Database",
+          //   CourseDuration: "10 weeks",
+          //   CourseType: "skill based",
+          //   SpecificCourseGoals: "Certification",
+          //   TargetAudience: "Frontend Developer",
+          //   CurrentSkillLevel: "Graduates",
+          //   PriorKnowledge: "HTML/CSS/Advance JS/React",
+          // }
           try {
             const res = await axios.post(
               process.env.NEXT_PUBLIC_BACKEND_API_URL?.replace(/\/?$/, "") +
                 "/lessonplan",
+
               {
                 CourseType: values.CourseType,
                 CourseSubject: values.CourseSubject,
@@ -121,6 +132,8 @@ const SideNav = ({ setUserData }: any) => {
           } catch (error) {
             const err: any = axiosErrorHandler(error);
             console.log("err:", err);
+          } finally {
+            setIsLoading(false);
           }
         }}
       >
@@ -296,6 +309,17 @@ const SideNav = ({ setUserData }: any) => {
                         }}
                       />
                     )}
+
+                    <input
+                      type="text"
+                      name="CourseOutcome"
+                      placeholder="Enter Target Audience (Eg: Html, React, etc)"
+                      className="min-h-[42px] px-[13px] py-[9px] rounded-[6px] border border-[#D1D5DB] mt-[4px] placeholder:text-[#6B7280] dark:placeholder:text-inherit"
+                      style={{ boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)" }}
+                      onChange={(e: any) => {
+                        setFieldValue("TargetAudience", e.target.value);
+                      }}
+                    />
                     {errors.TargetAudience && touched.TargetAudience ? (
                       <p className="text-[#d61e27] mt-[8px]">
                         {errors.TargetAudience}
@@ -312,6 +336,16 @@ const SideNav = ({ setUserData }: any) => {
                         }}
                       />
                     )}
+                    <input
+                      type="text"
+                      name="CourseOutcome"
+                      placeholder="Enter Current Skill Level (Eg: Html, React, etc)"
+                      className="min-h-[42px] px-[13px] py-[9px] rounded-[6px] border border-[#D1D5DB] mt-[4px] placeholder:text-[#6B7280] dark:placeholder:text-inherit"
+                      style={{ boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)" }}
+                      onChange={(e: any) => {
+                        setFieldValue("CurrentSkillLevel", e.target.value);
+                      }}
+                    />
                     {errors.CurrentSkillLevel && touched.CurrentSkillLevel ? (
                       <p className="text-[#d61e27] mt-[8px]">
                         {errors.CurrentSkillLevel}
@@ -328,6 +362,16 @@ const SideNav = ({ setUserData }: any) => {
                         }}
                       />
                     )}
+                    <input
+                      type="text"
+                      name="CourseOutcome"
+                      placeholder="Enter Curriculum Plan (Eg: Html, React, etc)"
+                      className="min-h-[42px] px-[13px] py-[9px] rounded-[6px] border border-[#D1D5DB] mt-[4px] placeholder:text-[#6B7280] dark:placeholder:text-inherit"
+                      style={{ boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)" }}
+                      onChange={(e: any) => {
+                        setFieldValue("CurriculumPlan", e.target.value);
+                      }}
+                    />
                     {errors.CurriculumPlan && touched.CurriculumPlan ? (
                       <p className="text-[#d61e27] mt-[8px]">
                         {errors.CurriculumPlan}

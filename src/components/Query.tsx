@@ -24,38 +24,38 @@ const Query = ({
   let timer: any = null;
   let markDownText = "";
 
-  const type = async () => {
-    clearTimeout(timer);
-    let id = ".typewriter" + queryIndex;
+  // const type = async () => {
+  //   clearTimeout(timer);
+  //   let id = ".typewriter" + queryIndex;
 
-    const typewriter: any = document.querySelector(id);
+  //   const typewriter: any = document.querySelector(id);
 
-    if (!typewriter) return;
+  //   if (!typewriter) return;
 
-    if (!markDownText) {
-      markDownText = typewriter.innerHTML;
-    }
+  //   if (!markDownText) {
+  //     markDownText = typewriter.innerHTML;
+  //   }
 
-    if (index < markDownText.length) {
-      typewriter.innerHTML =
-        markDownText.slice(0, index) +
-        '<span className="blinking-cursor">|</span>';
-      index++;
-      timer = setTimeout(type, 60);
-    } else {
-      typewriter.innerHTML = markDownText.slice(0, index);
-    }
-  };
+  //   if (index < markDownText.length) {
+  //     typewriter.innerHTML =
+  //       markDownText.slice(0, index) +
+  //       '<span className="blinking-cursor">|</span>';
+  //     index++;
+  //     timer = setTimeout(type, 60);
+  //   } else {
+  //     typewriter.innerHTML = markDownText.slice(0, index);
+  //   }
+  // };
 
-  React.useEffect(() => {
-    if (
-      Number(localStorage.getItem("typeEffectIndex")) !== queryIndex &&
-      typeEffect
-    ) {
-      type();
-      localStorage.setItem("typeEffectIndex", queryIndex.toString());
-    }
-  }, [typeEffect]);
+  // React.useEffect(() => {
+  //   if (
+  //     Number(localStorage.getItem("typeEffectIndex")) !== queryIndex &&
+  //     typeEffect
+  //   ) {
+  //     type();
+  //     localStorage.setItem("typeEffectIndex", queryIndex.toString());
+  //   }
+  // }, [typeEffect]);
   // Typewriter effect end
 
   return (

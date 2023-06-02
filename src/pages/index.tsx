@@ -5,8 +5,8 @@ import PromptInput from "@/components/PromptInput";
 import Query from "@/components/Query";
 import { axiosErrorHandler } from "@/util/error";
 import SideNav from "@/components/SideNav";
-// import Lottie from "react-lottie-player";
-// import loadingLottie from "../assets/loading.json";
+import Lottie from "react-lottie-player";
+import loadingLottie from "../assets/loading.json";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,22 +22,41 @@ const Index = () => {
     setIsLoading(true);
     try {
       const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL?.replace(/\/?$/, "")}/user`,
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL?.replace(
+          /\/?$/,
+          ""
+        )}/lessonplanquery`,
         {
-          userData,
-          prompt,
-          slug: userSlug,
+          // userData,
+          output: prompt,
+          // slug: userSlug,
         }
       );
 
-      let data = res.data;
+      // let data = res.data;
 
-      if (!userSlug) {
-        localStorage.setItem("userSlug", JSON.stringify(data.slug));
-        setUserSlug(data.slug);
+      if (res.data?.["GPT Output"]) {
+        setUserData((prev: any) => {
+          localStorage.setItem(
+            "userData",
+            JSON.stringify([
+              ...prev,
+              { role: "assistant", content: res?.data?.["GPT Output"] },
+            ])
+          );
+          return [
+            ...prev,
+            { role: "assistant", content: res?.data?.["GPT Output"] },
+          ];
+        });
       }
-      setResponse(data);
-      setUserData([...data.conversation]);
+
+      // if (!userSlug) {
+      //   localStorage.setItem("userSlug", JSON.stringify(data.slug));
+      //   setUserSlug(data.slug);
+      // }
+      // setResponse(data);
+      // setUserData([...data.conversation]);
     } catch (error) {
       const err: any = axiosErrorHandler(error);
       console.log("err:", err);
@@ -179,7 +198,7 @@ const Index = () => {
 
       <div className="w-full flex items-start justify-between max-w-[1440px] mx-auto">
         <div className="hidden md:flex flex-1 w-full min-w-[40%] min-h-screen border-r">
-          <SideNav setUserData={setUserData} />
+          <SideNav setIsLoading={setIsLoading} setUserData={setUserData} />
         </div>
         <div className="w-full min-h-screen">
           <div className="flex flex-wrap justify-between border-b px-[24px] py-[16px]">
@@ -187,7 +206,7 @@ const Index = () => {
           </div>
           <div className="overflow-hidden min-h-screen">
             <div className="overflow-y-auto">
-              {/* {isLoading ? (
+              {isLoading ? (
                 <div className="min-h-[60vh] flex flex-col items-center justify-center">
                   <Lottie
                     loop
@@ -199,36 +218,36 @@ const Index = () => {
                     Generating curriculum, this may take up to a minute
                   </p>
                 </div>
-              ) : ( */}
-              <div className="max-h-screen w-full">
-                {userData && userData.length > 0 ? (
-                  userData.map((item: any, index: number) => {
-                    return (
-                      <Query
-                        {...item}
-                        queryIndex={index}
-                        typeEffect={index === userData.length - 1}
+              ) : (
+                <div className="max-h-screen w-full">
+                  {userData && userData.length > 0 ? (
+                    userData.map((item: any, index: number) => {
+                      return (
+                        <Query
+                          {...item}
+                          queryIndex={index}
+                          typeEffect={index === userData.length - 1}
+                        />
+                      );
+                    })
+                  ) : (
+                    <div className="min-h-[70vh] items-center justify-center flex flex-col text-center">
+                      <img
+                        className="max-w-[96px] max-h-[96px] mx-auto"
+                        src="/img/chat/empty-state.svg"
+                        alt="empty-state"
                       />
-                    );
-                  })
-                ) : (
-                  <div className="min-h-[70vh] items-center justify-center flex flex-col text-center">
-                    <img
-                      className="max-w-[96px] max-h-[96px] mx-auto"
-                      src="/img/chat/empty-state.svg"
-                      alt="empty-state"
-                    />
-                    <h1 className="text-2xl leading-7 font-bold text-[#111827] dark:text-inherit">
-                      Nothing here yet
-                    </h1>
-                    <p className="mt-[12px] text-base leading-5 font-normal text-[#374151] dark:text-inherit">
-                      Fill in the fields to generate the curriculum plan
-                    </p>
-                  </div>
-                )}
-                <div className="h-80 flex-shrink-0"></div>
-              </div>
-              {/* )} */}
+                      <h1 className="text-2xl leading-7 font-bold text-[#111827] dark:text-inherit">
+                        Nothing here yet
+                      </h1>
+                      <p className="mt-[12px] text-base leading-5 font-normal text-[#374151] dark:text-inherit">
+                        Fill in the fields to generate the curriculum plan
+                      </p>
+                    </div>
+                  )}
+                  <div className="h-80 flex-shrink-0"></div>
+                </div>
+              )}
             </div>
           </div>
           {userData && userData.length > 0 && (
