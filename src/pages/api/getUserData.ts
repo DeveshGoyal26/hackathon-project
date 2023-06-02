@@ -1,6 +1,6 @@
 import { axiosErrorHandler } from "@/util/error";
 import userSchema from "@/model/conversation";
-import connectDB from "../db";
+import connectDB from "../../db";
 import mongoose from "mongoose";
 
 let conversation: any = [];

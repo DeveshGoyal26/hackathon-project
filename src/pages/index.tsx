@@ -225,13 +225,14 @@ const Index = () => {
                       return (
                         <Query
                           {...item}
+                          key={index}
                           queryIndex={index}
                           typeEffect={index === userData.length - 1}
                         />
                       );
                     })
                   ) : (
-                    <div className="min-h-[70vh] items-center justify-center flex flex-col text-center">
+                    <div className="min-h-[60vh] items-center justify-center flex flex-col text-center">
                       <img
                         className="max-w-[96px] max-h-[96px] mx-auto"
                         src="/img/chat/empty-state.svg"

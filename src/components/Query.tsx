@@ -86,8 +86,9 @@ const Query = ({
                 className={`${
                   "typewriter" + queryIndex
                 } w-[calc(100%-50px)] p-[16px] rounded-[12px] border border-[#D1D5DB] prose prose-slatec dark:prose-invert lg:prose-lg break-words`}
-                children={content}
-              ></ReactMarkdown>
+              >
+                {content}
+              </ReactMarkdown>
 
               <div className=" sticky top-[10px] h-full flex flex-col gap-[16px] opacity-0 transition-opacity delay-200 group-hover:opacity-[1]">
                 <button className="text-[#6B7280] dark:text-white">
