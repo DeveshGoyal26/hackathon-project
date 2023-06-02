@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from "uuid";
 import { axiosErrorHandler } from "@/util/error";
 import { Configuration, OpenAIApi } from "openai";
 import userSchema from "@/model/conversation";
-import connectDB from "../db";
+import connectDB from "../../db";
 import mongoose from "mongoose";
 
 let conversation: any = [];
