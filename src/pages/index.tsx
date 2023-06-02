@@ -5,6 +5,8 @@ import PromptInput from "@/components/PromptInput";
 import Query from "@/components/Query";
 import { axiosErrorHandler } from "@/util/error";
 import SideNav from "@/components/SideNav";
+// import Lottie from "react-lottie-player";
+// import loadingLottie from "../assets/loading.json";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -102,10 +104,10 @@ const Index = () => {
 
   return (
     <main
-      className={`flex max-h-screen overflow-hidden flex-col justify-between ${inter.className}`}
+      className={`flex max-h-screen relative overflow-hidden flex-col justify-between ${inter.className}`}
     >
       <div
-        className="max-h-[64px] bg-white dark:bg-black sticky z-[3] top-0 py-[20px] px-[30px] flex items-center justify-between"
+        className="max-h-[64px] bg-white dark:bg-black sticky z-[3] top-0 py-[20px] px-[16px] md:px-[30px] flex items-center justify-between"
         style={{
           boxShadow:
             "0px 1px 3px rgba(0, 0, 0, 0.1), 0px 1px 2px rgba(0, 0, 0, 0.06)",
@@ -118,7 +120,11 @@ const Index = () => {
         )}
 
         <button
-          className="p-[8px] border rounded-md border-neutral-700 transition-colors hover:border-gray-300"
+          className="p-[8px] rounded-md border border-[#D1D5DB] transition-colors hover:border-gray-400"
+          style={{
+            boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)",
+            color: isDarkMode ? "inherit" : "#374151",
+          }}
           onClick={() => {
             if (isDarkMode) {
               localStorage.setItem("isDarkTheme", "false");
@@ -173,43 +179,67 @@ const Index = () => {
 
       <div className="w-full flex items-start justify-between max-w-[1440px] mx-auto">
         <div className="hidden md:flex flex-1 w-full min-w-[40%] min-h-screen border-r">
-          <div className="overflow-y-auto w-full">
-            <div className="max-h-screen w-full ">
-              <SideNav isDarkMode={isDarkMode} />
-              <div className="h-20 flex-shrink-0"></div>
-            </div>
-          </div>
+          <SideNav setUserData={setUserData} />
         </div>
         <div className="w-full min-h-screen">
           <div className="flex flex-wrap justify-between border-b px-[24px] py-[16px]">
             <p>Results</p>
           </div>
           <div className="overflow-hidden min-h-screen">
-            <div className="overflow-y-auto ">
+            <div className="overflow-y-auto">
+              {/* {isLoading ? (
+                <div className="min-h-[60vh] flex flex-col items-center justify-center">
+                  <Lottie
+                    loop
+                    animationData={loadingLottie}
+                    play
+                    style={{ width: 150, height: 150 }}
+                  />
+                  <p className="text-base leading-5 font-normal">
+                    Generating curriculum, this may take up to a minute
+                  </p>
+                </div>
+              ) : ( */}
               <div className="max-h-screen w-full">
-                {userData &&
-                  userData.length > 0 &&
+                {userData && userData.length > 0 ? (
                   userData.map((item: any, index: number) => {
                     return (
                       <Query
-                        key={index}
                         {...item}
                         queryIndex={index}
                         typeEffect={index === userData.length - 1}
                       />
                     );
-                  })}
-                <div className="h-60 flex-shrink-0"></div>
+                  })
+                ) : (
+                  <div className="min-h-[70vh] items-center justify-center flex flex-col text-center">
+                    <img
+                      className="max-w-[96px] max-h-[96px] mx-auto"
+                      src="/img/chat/empty-state.svg"
+                      alt="empty-state"
+                    />
+                    <h1 className="text-2xl leading-7 font-bold text-[#111827] dark:text-inherit">
+                      Nothing here yet
+                    </h1>
+                    <p className="mt-[12px] text-base leading-5 font-normal text-[#374151] dark:text-inherit">
+                      Fill in the fields to generate the curriculum plan
+                    </p>
+                  </div>
+                )}
+                <div className="h-80 flex-shrink-0"></div>
               </div>
+              {/* )} */}
             </div>
           </div>
-          {/* <PromptInput
-            prompt={prompt}
-            isLoading={isLoading}
-            setPrompt={setPrompt}
-            isDarkMode={isDarkMode}
-            handleSubmit={handleSubmit}
-          /> */}
+          {userData && userData.length > 0 && (
+            <PromptInput
+              prompt={prompt}
+              isLoading={isLoading}
+              setPrompt={setPrompt}
+              isDarkMode={isDarkMode}
+              handleSubmit={handleSubmit}
+            />
+          )}
         </div>
       </div>
     </main>

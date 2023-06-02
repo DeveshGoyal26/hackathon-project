@@ -10,11 +10,11 @@ const PromptInput = ({
   return (
     <div
       className="px-[16px] text-center sticky bottom-[0px] pb-[40px] mt-[60px]"
-      style={{
-        background: `linear-gradient(180deg,rgba(53,55,64,0),${
-          isDarkMode ? "#121212" : "#f0efef"
-        } 58.85%)`,
-      }}
+      // style={{
+      //   background: `linear-gradient(180deg,rgba(53,55,64,0),${
+      //     isDarkMode ? "#121212" : "#f0efef"
+      //   } 58.85%)`,
+      // }}
     >
       <form
         onSubmit={(e) => {
@@ -29,13 +29,13 @@ const PromptInput = ({
           onChange={(e) => {
             setPrompt(e.target.value);
           }}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && prompt.length > 0) {
-              e.preventDefault();
-              handleSubmit();
-            }
-          }}
-          className="p-[1rem] pr-[48px] min-h-[58px] rounded-md w-full border-neutral-600 transition-colors hover:border-gray-300"
+          // onKeyDown={(e) => {
+          //   if (e.key === "Enter" && prompt.length > 0) {
+          //     e.preventDefault();
+          //     handleSubmit();
+          //   }
+          // }}
+          className="p-[1rem] pr-[48px] min-h-[58px] text-inherit rounded-md w-full border-neutral-600 transition-colors hover:border-gray-300"
         />
 
         <div className="absolute right-[.75rem] bottom-[.75rem]">

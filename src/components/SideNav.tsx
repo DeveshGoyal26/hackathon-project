@@ -1,157 +1,357 @@
 import React from "react";
 import Select from "react-select";
+import ChipInput from "./ChipInput";
+import TabSelect from "./TabSelect";
+import * as Yup from "yup";
+import { Form, Formik } from "formik";
+import axios from "axios";
+import { axiosErrorHandler } from "@/util/error";
 
-const SideNav = ({ isDarkMode }: any) => {
+const SignupSchema = Yup.object().shape({
+  CourseSubject: Yup.string().required("Required"),
+  CourseDuration: Yup.string().required("Required"),
+  CourseType: Yup.string().required("Required"),
+  TargetAudience: Yup.string().required("Required"),
+  SpecificCourseGoals: Yup.string().required("Required"),
+  CurrentSkillLevel: Yup.string().required("Required"),
+  PriorKnowledge: Yup.string().required("Required"),
+  CurriculumPlan: Yup.string().required("Required"),
+});
+
+const SideNav = ({ setUserData }: any) => {
+  const courseFor = {
+    label: "Who is the course for?",
+    chips: [
+      { label: "Students", value: "students", active: false },
+      { label: "Freshers", value: "freshers", active: false },
+      {
+        label: "Experienced Professionals",
+        value: "experienced professionals",
+        active: false,
+      },
+    ],
+  };
+
+  const expertiseLevel = {
+    label: "What is the expertise level?",
+    chips: [
+      { label: "Beginner", value: "beginner", active: false },
+      { label: "Intermediate", value: "intermediate", active: false },
+      { label: "Advanced", value: "advanced", active: false },
+    ],
+  };
+
+  const curriculumPlan = {
+    label: "What type of curriculum plan?",
+    chips: [
+      { label: "Lecture Plan", value: "Lecture Plan", active: false },
+      { label: "Course Plan", value: "Course Plan", active: false },
+    ],
+  };
+
+  const languages = [
+    { value: "React", label: "React" },
+    { value: "Javascript", label: "Javascript" },
+    { value: "Angular", label: "Angular" },
+    { value: "MongoDB", label: "MongoDB" },
+    { value: "CSS", label: "CSS" },
+  ];
+
+  const duration = [
+    { value: "1 week", label: "1 week" },
+    { value: "1 month", label: "1 month" },
+    { value: "3 months", label: "3 months" },
+    { value: "6 months", label: "6 months" },
+    { value: "1 year", label: "1 year" },
+  ];
+
   return (
-    <div className="p-[32px]">
-      <form
-        onSubmit={() => {
-          console.log("Submit");
+    <div className="w-full">
+      <Formik
+        initialValues={{
+          CourseType: "",
+          CourseSubject: "",
+          CourseDuration: "",
+          TargetAudience: "",
+          SpecificCourseGoals: "",
+          CurrentSkillLevel: "",
+          PriorKnowledge: "",
+          CurriculumPlan: "",
+        }}
+        validationSchema={SignupSchema}
+        onSubmit={async (values) => {
+          // same shape as initial values
+          console.log(values);
+
+          if (values?.CurriculumPlan) {
+            values?.CurriculumPlan;
+          }
+
+          try {
+            const res = await axios.post(
+              process.env.NEXT_PUBLIC_BACKEND_API_URL?.replace(/\/?$/, "") +
+                "/lessonplan",
+              {
+                CourseType: values.CourseType,
+                CourseSubject: values.CourseSubject,
+                CourseDuration: values.CourseDuration,
+                TargetAudience: values.TargetAudience,
+                SpecificCourseGoals: values.SpecificCourseGoals,
+                CurrentSkillLevel: values.CurrentSkillLevel,
+                PriorKnowledge: values.PriorKnowledge,
+              }
+            );
+
+            console.log("res:", res.data);
+            if (res.data?.["GPT Output"]) {
+              setUserData((prev: any) => {
+                localStorage.setItem(
+                  "userData",
+                  JSON.stringify([
+                    ...prev,
+                    { role: "assistant", content: res?.data?.["GPT Output"] },
+                  ])
+                );
+                return [
+                  ...prev,
+                  { role: "assistant", content: res?.data?.["GPT Output"] },
+                ];
+              });
+            }
+          } catch (error) {
+            const err: any = axiosErrorHandler(error);
+            console.log("err:", err);
+          }
         }}
       >
-        <h1 className="text-2xl leading-7 font-bold">Curriculum Generator</h1>
+        {({
+          errors,
+          touched,
+          values,
+          handleChange,
+          setFieldValue,
+          handleSubmit,
+        }) => {
+          // console.log("errors:", errors);
+          return (
+            <Form>
+              <div className="overflow-y-auto w-full p-[20px]">
+                <div className="max-h-screen w-full ">
+                  <h1 className="text-2xl leading-7 font-bold">
+                    Curriculum Generator
+                  </h1>
 
-        <p className="mt-[16px] text-[#374151] dark:text-inherit text-base leading-5 font-normal">
-          Fill the following fields to generate the curriculum plan of choice
-        </p>
+                  <p className="mt-[16px] text-[#374151] dark:text-inherit text-base leading-5 font-normal">
+                    Fill the following fields to generate the curriculum plan of
+                    choice
+                  </p>
 
-        <div className="flex flex-col mt-[24px]">
-          <label
-            className="text-sm leading-5 font-medium text-[#374151] dark:text-inherit"
-            htmlFor="language"
-          >
-            Coding Language
-          </label>
-          <input
-            type="text"
-            name="language"
-            placeholder="Enter coding language (Eg: React)"
-            className="h-[42px] px-[13px] py-[9px] rounded-[6px] border border-[#D1D5DB] mt-[4px] placeholder:text-[#6B7280] dark:placeholder:text-inherit"
-            style={{ boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)" }}
-          />
-        </div>
+                  <div className="mt-[24px]">
+                    <ChipInput
+                      label={"Course Subject"}
+                      options={languages}
+                      onChange={(data: any) => {
+                        setFieldValue(
+                          "CourseSubject",
+                          data
+                            .map((el: any) => {
+                              if (el.value) {
+                                return el.value;
+                              }
+                            })
+                            .join(", ")
+                        );
+                      }}
+                    />
+                    {errors.CourseSubject && touched.CourseSubject ? (
+                      <p className="text-[#d61e27] mt-[8px]">
+                        {errors.CourseSubject}
+                      </p>
+                    ) : null}
+                  </div>
 
-        <p className="mt-[12px] text-sm leading-5 font-normal text-[#4B5563] dark:text-inherit">
-          Suggested:
-        </p>
+                  <div className="mt-[24px]">
+                    <ChipInput
+                      label={"Course Duration"}
+                      options={duration}
+                      onChange={(data: any) => {
+                        setFieldValue(
+                          "CourseDuration",
+                          data
+                            .map((el: any) => {
+                              if (el.value) {
+                                return el.value;
+                              }
+                            })
+                            .join(", ")
+                        );
+                      }}
+                    />
+                    {errors.CourseDuration && touched.CourseDuration ? (
+                      <p className="text-[#d61e27] mt-[8px]">
+                        {errors.CourseDuration}
+                      </p>
+                    ) : null}
+                  </div>
 
-        <div className="mt-[8px] flex flex-wrap gap-[8px] md:gap-[16px]">
-          <button
-            type="button"
-            className="inline-flex items-center rounded-xl bg-blue-100 px-2 py-1 text-xs font-medium text-blue-800 ring-1 ring-inset ring-gray-500/10"
-          >
-            React
-          </button>
+                  <div className="mt-[24px]">
+                    <label
+                      className="text-sm leading-5 font-medium text-[#374151] dark:text-inherit"
+                      htmlFor="CourseType"
+                    >
+                      Course Type
+                    </label>
 
-          <button
-            type="button"
-            className="inline-flex items-center rounded-xl bg-blue-100 px-2 py-1 text-xs font-medium text-blue-800 ring-1 ring-inset ring-gray-500/10"
-          >
-            Javascript
-          </button>
-        </div>
+                    <Select
+                      name="CourseType"
+                      options={[
+                        { value: "Outcome Based", label: "Outcome Based" },
+                        {
+                          value: "Experience Based",
+                          label: "Experience Based",
+                        },
+                      ]}
+                      styles={{
+                        control: (provided: any) => ({
+                          ...provided,
+                          marginTop: "4px",
+                          minHeight: "42px",
+                          border: "1px solid #D1D5DB",
+                          background: "field",
+                          color: "inherit",
+                          borderRadius: "6px",
+                          boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)",
+                          "&:hover'": {
+                            border: "1px solid #D1D5DB",
+                          },
+                        }),
+                        placeholder: (provided) => ({
+                          ...provided,
+                          color: "#6B7280", // Set the desired placeholder color here
+                        }),
+                      }}
+                      onChange={(data) => {
+                        setFieldValue("CourseType", data?.value);
+                      }}
+                    />
+                  </div>
 
-        <div className="flex flex-col mt-[24px]">
-          <label
-            className="mb-[4px] text-sm leading-5 font-medium text-[#374151] dark:text-inherit"
-            htmlFor="time"
-          >
-            Time Period
-          </label>
-          {/* <input
-            type="text"
-            name="time"
-            placeholder="Enter coding language (Eg: React)"
-            className="h-[42px] px-[13px] py-[9px] rounded-[6px] border border-[#D1D5DB] mt-[4px] placeholder:text-[#6B7280] dark:placeholder:text-inherit"
-            style={{ boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)" }}
-          /> */}
-          <Select
-            placeholder="Select"
-            name="time"
-            styles={{
-              input: (provided, state) => ({
-                ...provided,
-                color: "inherit",
-              }),
-              control: (provided, state) => ({
-                ...provided,
-                minHeight: "42px",
-                border: "1px solid #D1D5DB",
-                background: "field",
-                color: "inherit",
-                boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)",
-                "&:hover'": {
-                  border: "1px solid #D1D5DB",
-                },
-              }),
-              placeholder: (provided, state) => ({
-                ...provided,
-                color: isDarkMode ? "inherit" : "#6B7280",
-              }),
-              menu: (provided, state) => ({
-                ...provided,
-                background: "field",
-                color: "inherit",
-              }),
-            }}
-          />
-        </div>
+                  <div className="mt-[24px] flex flex-col">
+                    <label
+                      className="text-sm leading-5 font-medium text-[#374151] dark:text-inherit"
+                      htmlFor="CourseOutcome"
+                    >
+                      Course Outcome
+                    </label>
 
-        <div className="mt-[24px]">
-          <label className="mt-[24px] text-sm leading-5 font-medium text-[#374151] dark:text-inherit">
-            Expertise Level
-          </label>
+                    <input
+                      type="text"
+                      name="CourseOutcome"
+                      placeholder="Enter course outcome (Eg: Placement, Skill Development, etc)"
+                      className="min-h-[42px] px-[13px] py-[9px] rounded-[6px] border border-[#D1D5DB] mt-[4px] placeholder:text-[#6B7280] dark:placeholder:text-inherit"
+                      style={{ boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)" }}
+                      onChange={(e: any) => {
+                        setFieldValue("SpecificCourseGoals", e.target.value);
+                      }}
+                    />
+                    {errors.SpecificCourseGoals &&
+                    touched.SpecificCourseGoals ? (
+                      <p className="text-[#d61e27] mt-[8px]">
+                        {errors.SpecificCourseGoals}
+                      </p>
+                    ) : null}
+                  </div>
 
-          <div className="flex flex-wrap mt-[8px]">
-            <button
-              type="button"
-              style={{ boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)" }}
-              className="rounded-[6px] border-[#D1D5DB] hover:bg-[#F9FAFB] dark:hover:bg-[#222222] text-[#374151] dark:text-inherit border p-[9px_17px]"
-            >
-              Beginner
-            </button>
-          </div>
-        </div>
+                  <div className="mt-[24px] flex flex-col">
+                    <label
+                      className="text-sm leading-5 font-medium text-[#374151] dark:text-inherit"
+                      htmlFor="CourseOutcome"
+                    >
+                      Prior Knowledge
+                    </label>
 
-        <div className="mt-[24px]">
-          <label className="mt-[24px] text-sm leading-5 font-medium text-[#374151] dark:text-inherit">
-          Curriculum Plan
-          </label>
+                    <input
+                      type="text"
+                      name="CourseOutcome"
+                      placeholder="Enter prior knowledge (Eg: Html, React, etc)"
+                      className="min-h-[42px] px-[13px] py-[9px] rounded-[6px] border border-[#D1D5DB] mt-[4px] placeholder:text-[#6B7280] dark:placeholder:text-inherit"
+                      style={{ boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)" }}
+                      onChange={(e: any) => {
+                        setFieldValue("PriorKnowledge", e.target.value);
+                      }}
+                    />
+                    {errors.PriorKnowledge && touched.PriorKnowledge ? (
+                      <p className="text-[#d61e27] mt-[8px]">
+                        {errors.PriorKnowledge}
+                      </p>
+                    ) : null}
+                  </div>
 
-          <div className="flex flex-wrap mt-[8px]">
-            <button
-              type="button"
-              style={{ boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)" }}
-              className="rounded-[6px] border-[#D1D5DB] hover:bg-[#F9FAFB] dark:hover:bg-[#222222] text-[#374151] dark:text-inherit border p-[9px_17px]"
-            >
-              Lesson Plan
-            </button>
-          </div>
-        </div>
+                  <div className="mt-[24px]">
+                    {courseFor && (
+                      <TabSelect
+                        options={courseFor}
+                        onChange={(data: any) => {
+                          setFieldValue("TargetAudience", data.value);
+                        }}
+                      />
+                    )}
+                    {errors.TargetAudience && touched.TargetAudience ? (
+                      <p className="text-[#d61e27] mt-[8px]">
+                        {errors.TargetAudience}
+                      </p>
+                    ) : null}
+                  </div>
 
-        <div className="flex flex-col mt-[24px]">
-          <label
-            className="text-sm leading-5 font-medium text-[#374151] dark:text-inherit"
-            htmlFor="comments"
-          >
-            Additional Comments (Optional)
-          </label>
-          <textarea
-            name="comments"
-            rows={4}
-            placeholder="Enter coding language (Eg: React)"
-            className="px-[13px] py-[9px] rounded-[6px] border border-[#D1D5DB] mt-[4px] placeholder:text-[#6B7280] dark:placeholder:text-inherit"
-            style={{ boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)" }}
-          />
-        </div>
+                  <div className="mt-[24px]">
+                    {expertiseLevel && (
+                      <TabSelect
+                        options={expertiseLevel}
+                        onChange={(data: any) => {
+                          setFieldValue("CurrentSkillLevel", data.value);
+                        }}
+                      />
+                    )}
+                    {errors.CurrentSkillLevel && touched.CurrentSkillLevel ? (
+                      <p className="text-[#d61e27] mt-[8px]">
+                        {errors.CurrentSkillLevel}
+                      </p>
+                    ) : null}
+                  </div>
 
-        <button
-          type="submit"
-          className="w-full mt-[32px] transition-colors ring-offset-1 focus:ring-2 focus-visible:ring-2 rounded-[6px] bg-[#2563EB] hover:bg-[#225bd7] h-[50px] text-white dark:text-inherit"
-        >
-          Generate Curriculum Plan
-        </button>
-      </form>
+                  <div className="mt-[24px]">
+                    {curriculumPlan && (
+                      <TabSelect
+                        options={curriculumPlan}
+                        onChange={(data: any) => {
+                          setFieldValue("CurriculumPlan", data.value);
+                        }}
+                      />
+                    )}
+                    {errors.CurriculumPlan && touched.CurriculumPlan ? (
+                      <p className="text-[#d61e27] mt-[8px]">
+                        {errors.CurriculumPlan}
+                      </p>
+                    ) : null}
+                  </div>
+
+                  <div className="h-52 flex-shrink-0"></div>
+                </div>
+              </div>
+
+              <div className="sticky bottom-0 py-[8px] px-[20px] bg-white dark:bg-black">
+                <button
+                  type="submit"
+                  // onClick={() => handleSubmit()}
+                  className="w-full transition-colors ring-offset-1 focus:ring-2 focus-visible:ring-2 rounded-[6px] bg-[#2563EB] hover:bg-[#225bd7] h-[50px] text-white dark:text-inherit"
+                >
+                  Generate Curriculum Plan
+                </button>
+              </div>
+            </Form>
+          );
+        }}
+      </Formik>
     </div>
   );
 };

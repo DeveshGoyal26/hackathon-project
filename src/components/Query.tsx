@@ -1,3 +1,5 @@
+import ClipBoardIcon from "@/assets/ClipBoardIcon";
+import ShareIcon from "@/assets/ShareIcon";
 import React from "react";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import remarkGfm from "remark-gfm";
@@ -5,12 +7,15 @@ import remarkGfm from "remark-gfm";
 const Query = ({
   role,
   content,
+  showUser = true,
   typeEffect,
   queryIndex,
 }: {
   role: string;
   prompt: string;
+  content: string;
   response: string;
+  showUser: boolean;
   queryIndex: number;
   typeEffect: boolean;
 }) => {
@@ -36,7 +41,7 @@ const Query = ({
         markDownText.slice(0, index) +
         '<span className="blinking-cursor">|</span>';
       index++;
-      timer = setTimeout(type, 100);
+      timer = setTimeout(type, 60);
     } else {
       typewriter.innerHTML = markDownText.slice(0, index);
     }
@@ -56,24 +61,43 @@ const Query = ({
   return (
     <div className="flex flex-col">
       {role === "user" ? (
-        <div className="bg-[#f3f3f3] dark:bg-[#242424]">
-          <div className="flex items-start gap-[1.5rem] py-[30px] mx-auto px-[16px]">
-            <div className="w-[30px] sticky top-[100px]">You</div>
+        <div className="">
+          {/* <div className="flex items-start gap-[1.5rem] py-[30px] mx-auto px-[16px]">
+            {showUser && (
+              <div className="bg-[#D4A486] flex items-center justify-center overflow-hidden rounded-[500px] min-w-[40px] min-h-[40px] sticky top-[10px]">
+                You
+              </div>
+            )}
             <div className="w-[calc(100% - 50px)]">{content}</div>
-          </div>
+          </div> */}
         </div>
       ) : (
         <div>
-          <div className="flex items-start gap-[1.5rem] py-[30px] mx-auto px-[16px]">
-            <div className="w-[30px] sticky top-[10px]">Gpt</div>
+          <div className="flex items-start gap-[12px] py-[8px] mx-auto px-[16px]">
+            {showUser && (
+              <div className="bg-[#3D8DFE] flex items-center justify-center overflow-hidden rounded-[500px] min-w-[40px] min-h-[40px] sticky top-[10px]">
+                <img src="/img/chat/bot.svg" alt="bot" />
+              </div>
+            )}
 
-            <ReactMarkdown
-              remarkPlugins={[remarkGfm]}
-              className={`${
-                "typewriter" + queryIndex
-              } w-[calc(100%-50px)] prose prose-slatec dark:prose-invert lg:prose-lg break-words`}
-              children={content}
-            ></ReactMarkdown>
+            <div className="flex w-full gap-[8px] group h-full">
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                className={`${
+                  "typewriter" + queryIndex
+                } w-[calc(100%-50px)] p-[16px] rounded-[12px] border border-[#D1D5DB] prose prose-slatec dark:prose-invert lg:prose-lg break-words`}
+                children={content}
+              ></ReactMarkdown>
+
+              <div className=" sticky top-[10px] h-full flex flex-col gap-[16px] opacity-0 transition-opacity delay-200 group-hover:opacity-[1]">
+                <button className="text-[#6B7280] dark:text-white">
+                  <ShareIcon />
+                </button>
+                <button className="text-[#6B7280] dark:text-white">
+                  <ClipBoardIcon />
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}
