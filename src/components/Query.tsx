@@ -1,8 +1,18 @@
 import ClipBoardIcon from "@/assets/ClipBoardIcon";
 import ShareIcon from "@/assets/ShareIcon";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
+import useClipboard from "react-use-clipboard";
 import remarkGfm from "remark-gfm";
+import {
+  PDFDownloadLink,
+  Document,
+  Page,
+  Text,
+  StyleSheet,
+  View,
+} from "@react-pdf/renderer";
+import jsPDF from "jspdf";
 
 const Query = ({
   role,
@@ -19,6 +29,10 @@ const Query = ({
   queryIndex: number;
   typeEffect: boolean;
 }) => {
+  const [isCopied, setCopied] = useClipboard(content, {
+    successDuration: 800,
+  });
+
   // Typewriter effect start
   let index = 0;
   let timer: any = null;
@@ -58,6 +72,25 @@ const Query = ({
   // }, [typeEffect]);
   // Typewriter effect end
 
+  const handleGeneratePdf = () => {
+    let id = ".typewriter" + queryIndex;
+
+    const typewriter: any = document.querySelector(id);
+
+    if (!typewriter) return;
+
+    const doc = new jsPDF({
+      format: "a4",
+      unit: "pt",
+    });
+
+    doc.html(typewriter, {
+      async callback(doc) {
+        await doc.save("Curriculum");
+      },
+    });
+  };
+
   return (
     <div className="flex flex-col">
       {role === "user" ? (
@@ -81,21 +114,46 @@ const Query = ({
             )}
 
             <div className="flex w-full gap-[8px] group h-full">
-              <ReactMarkdown
-                remarkPlugins={[remarkGfm]}
-                className={`${
-                  "typewriter" + queryIndex
-                } w-[calc(100%-50px)] p-[16px] rounded-[12px] border border-[#D1D5DB] prose prose-slatec dark:prose-invert lg:prose-lg break-words`}
-              >
-                {content}
-              </ReactMarkdown>
+              <div className="w-[calc(100%-50px)] p-[16px] rounded-[12px] border border-[#D1D5DB]">
+                <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
+                  className={`${
+                    "typewriter" + queryIndex
+                  }  prose prose-slatec dark:prose-invert lg:prose-lg break-words`}
+                >
+                  {content}
+                </ReactMarkdown>
+              </div>
 
               <div className=" sticky top-[10px] h-full flex flex-col gap-[16px] opacity-0 transition-opacity delay-200 group-hover:opacity-[1]">
-                <button className="text-[#6B7280] dark:text-white">
+                <button
+                  onClick={handleGeneratePdf}
+                  className="text-[#6B7280] dark:text-white"
+                >
                   <ShareIcon />
                 </button>
-                <button className="text-[#6B7280] dark:text-white">
-                  <ClipBoardIcon />
+                <button
+                  onClick={setCopied}
+                  className="text-[#6B7280] dark:text-white"
+                >
+                  {isCopied ? (
+                    <svg
+                      stroke="currentColor"
+                      fill="none"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      className="h-4 w-4"
+                      height="1em"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  ) : (
+                    <ClipBoardIcon />
+                  )}
                 </button>
               </div>
             </div>

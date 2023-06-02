@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Inter } from "next/font/google";
 import axios from "axios";
 import PromptInput from "@/components/PromptInput";
@@ -7,6 +7,8 @@ import { axiosErrorHandler } from "@/util/error";
 import SideNav from "@/components/SideNav";
 import Lottie from "react-lottie-player";
 import loadingLottie from "../assets/loading.json";
+import scrollTo from "@/util/scrollTo";
+import { ThemeContext } from "@/context/themeContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,8 +17,8 @@ const Index = () => {
   const [response, setResponse] = useState("");
   const [userData, setUserData] = useState<any>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const [userSlug, setUserSlug] = useState("");
+  const { isDarkMode,setIsDarkMode }: any = useContext(ThemeContext);
 
   const handleSubmit = async () => {
     setIsLoading(true);
@@ -111,14 +113,22 @@ const Index = () => {
 
     if (userSlug) {
       setUserSlug(userSlug);
-      getUserData(userSlug);
+      // getUserData(userSlug);
     } else {
-      getUserData("");
+      // getUserData("");
     }
 
     if (localdata) {
       setUserData(JSON.parse(localdata));
     }
+
+    let objDiv: any = document.getElementById("scorllDiv");
+    setTimeout(() => {
+      objDiv.parentElement.scrollTo(
+        0,
+        objDiv.childNodes[objDiv.childNodes.length - 2].offsetTop - 120
+      );
+    }, 1);
   }, []);
 
   return (
@@ -205,7 +215,7 @@ const Index = () => {
             <p>Results</p>
           </div>
           <div className="overflow-hidden min-h-screen">
-            <div className="overflow-y-auto">
+            <div id="scorll" className="overflow-y-auto">
               {isLoading ? (
                 <div className="min-h-[60vh] flex flex-col items-center justify-center">
                   <Lottie
@@ -219,7 +229,7 @@ const Index = () => {
                   </p>
                 </div>
               ) : (
-                <div className="max-h-screen w-full">
+                <div id="scorllDiv" className="max-h-screen w-full">
                   {userData && userData.length > 0 ? (
                     userData.map((item: any, index: number) => {
                       return (
