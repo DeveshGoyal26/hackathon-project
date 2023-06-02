@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import Select from "react-select";
 import ChipInput from "./ChipInput";
 import TabSelect from "./TabSelect";
@@ -6,6 +6,8 @@ import * as Yup from "yup";
 import { Form, Formik } from "formik";
 import axios from "axios";
 import { axiosErrorHandler } from "@/util/error";
+import useClipboard from "react-use-clipboard";
+import { ThemeContext } from "@/context/themeContext";
 
 const SignupSchema = Yup.object().shape({
   CourseSubject: Yup.string().required("Required"),
@@ -19,6 +21,7 @@ const SignupSchema = Yup.object().shape({
 });
 
 const SideNav = ({ setUserData, setIsLoading }: any) => {
+  const { isDarkMode }: { isDarkMode: boolean } = useContext(ThemeContext);
   const courseFor = {
     label: "Who is the course for?",
     chips: [
@@ -88,15 +91,6 @@ const SideNav = ({ setUserData, setIsLoading }: any) => {
             values?.CurriculumPlan;
           }
 
-          // {
-          //   CourseSubject: "Database",
-          //   CourseDuration: "10 weeks",
-          //   CourseType: "skill based",
-          //   SpecificCourseGoals: "Certification",
-          //   TargetAudience: "Frontend Developer",
-          //   CurrentSkillLevel: "Graduates",
-          //   PriorKnowledge: "HTML/CSS/Advance JS/React",
-          // }
           try {
             const res = await axios.post(
               process.env.NEXT_PUBLIC_BACKEND_API_URL?.replace(/\/?$/, "") +
@@ -113,7 +107,6 @@ const SideNav = ({ setUserData, setIsLoading }: any) => {
               }
             );
 
-            console.log("res:", res.data);
             if (res.data?.["GPT Output"]) {
               setUserData((prev: any) => {
                 localStorage.setItem(
@@ -240,7 +233,7 @@ const SideNav = ({ setUserData, setIsLoading }: any) => {
                         }),
                         placeholder: (provided) => ({
                           ...provided,
-                          color: "#6B7280", // Set the desired placeholder color here
+                          color:isDarkMode ? 'inherit' : "#6B7280", // Set the desired placeholder color here
                         }),
                       }}
                       onChange={(data) => {
@@ -261,7 +254,7 @@ const SideNav = ({ setUserData, setIsLoading }: any) => {
                       type="text"
                       name="CourseOutcome"
                       placeholder="Enter course outcome (Eg: Placement, Skill Development, etc)"
-                      className="min-h-[42px] px-[13px] py-[9px] rounded-[6px] border border-[#D1D5DB] mt-[4px] placeholder:text-[#6B7280] dark:placeholder:text-inherit"
+                      className="w-full min-h-[42px] px-[13px] py-[9px] rounded-[6px] border border-[#D1D5DB] mt-[4px] placeholder:text-[#6B7280] dark:placeholder:text-inherit"
                       style={{ boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)" }}
                       onChange={(e: any) => {
                         setFieldValue("SpecificCourseGoals", e.target.value);
@@ -287,7 +280,7 @@ const SideNav = ({ setUserData, setIsLoading }: any) => {
                       type="text"
                       name="CourseOutcome"
                       placeholder="Enter prior knowledge (Eg: Html, React, etc)"
-                      className="min-h-[42px] px-[13px] py-[9px] rounded-[6px] border border-[#D1D5DB] mt-[4px] placeholder:text-[#6B7280] dark:placeholder:text-inherit"
+                      className="w-full min-h-[42px] px-[13px] py-[9px] rounded-[6px] border border-[#D1D5DB] mt-[4px] placeholder:text-[#6B7280] dark:placeholder:text-inherit"
                       style={{ boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)" }}
                       onChange={(e: any) => {
                         setFieldValue("PriorKnowledge", e.target.value);
@@ -309,12 +302,11 @@ const SideNav = ({ setUserData, setIsLoading }: any) => {
                         }}
                       />
                     )}
-
                     <input
                       type="text"
                       name="CourseOutcome"
                       placeholder="Enter Target Audience (Eg: Html, React, etc)"
-                      className="min-h-[42px] px-[13px] py-[9px] rounded-[6px] border border-[#D1D5DB] mt-[4px] placeholder:text-[#6B7280] dark:placeholder:text-inherit"
+                      className="w-full min-h-[42px] px-[13px] py-[9px] rounded-[6px] border border-[#D1D5DB] mt-[8px] placeholder:text-[#6B7280] dark:placeholder:text-inherit"
                       style={{ boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)" }}
                       onChange={(e: any) => {
                         setFieldValue("TargetAudience", e.target.value);
@@ -340,7 +332,7 @@ const SideNav = ({ setUserData, setIsLoading }: any) => {
                       type="text"
                       name="CourseOutcome"
                       placeholder="Enter Current Skill Level (Eg: Html, React, etc)"
-                      className="min-h-[42px] px-[13px] py-[9px] rounded-[6px] border border-[#D1D5DB] mt-[4px] placeholder:text-[#6B7280] dark:placeholder:text-inherit"
+                      className="w-full min-h-[42px] px-[13px] py-[9px] rounded-[6px] border border-[#D1D5DB] mt-[8px] placeholder:text-[#6B7280] dark:placeholder:text-inherit"
                       style={{ boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)" }}
                       onChange={(e: any) => {
                         setFieldValue("CurrentSkillLevel", e.target.value);
@@ -366,7 +358,7 @@ const SideNav = ({ setUserData, setIsLoading }: any) => {
                       type="text"
                       name="CourseOutcome"
                       placeholder="Enter Curriculum Plan (Eg: Html, React, etc)"
-                      className="min-h-[42px] px-[13px] py-[9px] rounded-[6px] border border-[#D1D5DB] mt-[4px] placeholder:text-[#6B7280] dark:placeholder:text-inherit"
+                      className="w-full min-h-[42px] px-[13px] py-[9px] rounded-[6px] border border-[#D1D5DB] mt-[8px] placeholder:text-[#6B7280] dark:placeholder:text-inherit"
                       style={{ boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)" }}
                       onChange={(e: any) => {
                         setFieldValue("CurriculumPlan", e.target.value);
