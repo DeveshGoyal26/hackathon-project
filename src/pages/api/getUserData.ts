@@ -1,6 +1,7 @@
 import { axiosErrorHandler } from "@/util/error";
-import User from "@/model/conversation";
+import userSchema from "@/model/conversation";
 import connectDB from "../db";
+import mongoose from "mongoose";
 
 let conversation: any = [];
 let slug = "";
@@ -11,6 +12,8 @@ export default async function handler(req: any, res: any) {
       const data = req.body;
 
       await connectDB();
+
+      const User = mongoose.models.User || mongoose.model("User", userSchema);
 
       if (data?.slug) {
         slug = data?.slug;

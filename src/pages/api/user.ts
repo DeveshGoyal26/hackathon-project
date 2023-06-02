@@ -1,8 +1,9 @@
 import { v4 as uuidv4 } from "uuid";
 import { axiosErrorHandler } from "@/util/error";
 import { Configuration, OpenAIApi } from "openai";
-import User from "@/model/conversation";
+import userSchema from "@/model/conversation";
 import connectDB from "../db";
+import mongoose from "mongoose";
 
 let conversation: any = [];
 let slug = "";
@@ -12,10 +13,13 @@ export default async function handler(req: any, res: any) {
     const configuration = new Configuration({
       apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
     });
+
     const openai = new OpenAIApi(configuration);
 
     try {
       await connectDB();
+
+      const User = mongoose.models.User || mongoose.model("User", userSchema);
 
       const data = req.body;
       console.log("data:", data);
@@ -35,9 +39,17 @@ export default async function handler(req: any, res: any) {
       } else {
         slug = data?.slug;
 
+        const userData = new User({
+          role: "user",
+          content: data?.prompt,
+          slug: slug,
+        });
+
+        await userData.save();
+
         let userConvos = await User.find({ slug: slug }, "role content -_id");
 
-        conversation = [...userConvos, { role: "user", content: data?.prompt }];
+        conversation = [...userConvos];
       }
 
       const response: any = await openai.createChatCompletion({

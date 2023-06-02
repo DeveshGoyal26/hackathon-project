@@ -36,7 +36,7 @@ const Query = ({
         markDownText.slice(0, index) +
         '<span className="blinking-cursor">|</span>';
       index++;
-      timer = setTimeout(type, 50);
+      timer = setTimeout(type, 100);
     } else {
       typewriter.innerHTML = markDownText.slice(0, index);
     }
@@ -57,21 +57,21 @@ const Query = ({
     <div className="flex flex-col">
       {role === "user" ? (
         <div className="bg-[#f3f3f3] dark:bg-[#242424]">
-          <div className="flex items-start gap-[1.5rem] py-[30px] max-w-[900px] mx-auto px-[16px]">
+          <div className="flex items-start gap-[1.5rem] py-[30px] mx-auto px-[16px]">
             <div className="w-[30px] sticky top-[100px]">You</div>
             <div className="w-[calc(100% - 50px)]">{content}</div>
           </div>
         </div>
       ) : (
         <div>
-          <div className="flex items-start gap-[1.5rem] py-[30px] max-w-[900px] mx-auto px-[16px]">
+          <div className="flex items-start gap-[1.5rem] py-[30px] mx-auto px-[16px]">
             <div className="w-[30px] sticky top-[10px]">Gpt</div>
 
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               className={`${
                 "typewriter" + queryIndex
-              } w-full prose prose-slatec dark:prose-invert lg:prose-lg break-words`}
+              } w-[calc(100%-50px)] prose prose-slatec dark:prose-invert lg:prose-lg break-words`}
               children={content}
             ></ReactMarkdown>
           </div>
