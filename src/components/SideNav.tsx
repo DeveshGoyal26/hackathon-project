@@ -47,7 +47,7 @@ const SideNav = ({
                 setUserData={setUserData}
                 setIsLoading={setIsLoading}
               />
-              <div className="h-[400px] flex-shrink-0"></div>
+              <div className="h-[100px] md:h-[400px] flex-shrink-0"></div>
             </>
           ) : (
             <>
@@ -55,7 +55,7 @@ const SideNav = ({
                 setUserData={setUserData}
                 setIsLoading={setIsLoading}
               />
-              <div className="h-[400px] flex-shrink-0"></div>
+              <div className="h-[200px] md:h-[400px] flex-shrink-0"></div>
             </>
           )}
         </div>
