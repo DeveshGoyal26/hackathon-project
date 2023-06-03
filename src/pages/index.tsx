@@ -69,7 +69,7 @@ const Index = () => {
           type: "error",
           hideProgressBar: false,
           closeOnClick: true,
-          pauseOnHover: true,
+          pauseOnHover: false,
           draggable: true,
           theme: isDarkMode ? "dark" : "light",
         });
@@ -80,7 +80,7 @@ const Index = () => {
           type: "error",
           hideProgressBar: false,
           closeOnClick: true,
-          pauseOnHover: true,
+          pauseOnHover: false,
           draggable: true,
           theme: isDarkMode ? "dark" : "light",
         });

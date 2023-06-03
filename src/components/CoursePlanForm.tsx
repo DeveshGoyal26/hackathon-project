@@ -133,7 +133,7 @@ const CoursePlanForm = ({
               type: "error",
               hideProgressBar: false,
               closeOnClick: true,
-              pauseOnHover: true,
+              pauseOnHover: false,
               draggable: true,
               theme: isDarkMode ? "dark" : "light",
             });
@@ -142,9 +142,10 @@ const CoursePlanForm = ({
               position: "top-right",
               autoClose: 5000,
               type: "error",
+              pauseOnHover: false,
               hideProgressBar: false,
               closeOnClick: true,
-              pauseOnHover: true,
+
               draggable: true,
               theme: isDarkMode ? "dark" : "light",
             });

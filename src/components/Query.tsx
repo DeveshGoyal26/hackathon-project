@@ -1,6 +1,6 @@
 import ClipBoardIcon from "@/assets/ClipBoardIcon";
 import ShareIcon from "@/assets/ShareIcon";
-import React, { useEffect, useRef } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import useClipboard from "react-use-clipboard";
 import remarkGfm from "remark-gfm";
@@ -13,6 +13,8 @@ import {
   View,
 } from "@react-pdf/renderer";
 import jsPDF from "jspdf";
+import { toast } from "react-toastify";
+import { ThemeContext } from "@/context/themeContext";
 
 const Query = ({
   role,
@@ -29,6 +31,7 @@ const Query = ({
   queryIndex: number;
   typeEffect: boolean;
 }) => {
+  const { isDarkMode }: any = useContext(ThemeContext);
   const [isCopied, setCopied] = useClipboard(content, {
     successDuration: 800,
   });
@@ -133,7 +136,20 @@ const Query = ({
                   <ShareIcon />
                 </button>
                 <button
-                  onClick={setCopied}
+                  onClick={() => {
+                    toast("Copied to clipboard", {
+                      position: "top-right",
+                      autoClose: 5000,
+                      type: "success",
+                      hideProgressBar: false,
+                      pauseOnHover: false,
+                      closeOnClick: true,
+                      draggable: true,
+                      theme: isDarkMode ? "dark" : "light",
+                    });
+                    setCopied();
+                  }}
+                  data-tooltip-target="tooltip-default"
                   className="text-[#6B7280] dark:text-white"
                 >
                   {isCopied ? (
@@ -155,6 +171,14 @@ const Query = ({
                     <ClipBoardIcon />
                   )}
                 </button>
+                <div
+                  id="tooltip-default"
+                  role="tooltip"
+                  className="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
+                >
+                  Tooltip content
+                  <div className="tooltip-arrow" data-popper-arrow></div>
+                </div>
               </div>
             </div>
           </div>
