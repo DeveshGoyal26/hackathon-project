@@ -3,11 +3,11 @@ import React, { useContext, useEffect, useState } from "react";
 
 const TabSelect = ({ options, onChange }: any) => {
   const isDarkMode = useContext(ThemeContext);
-  const [data, setData] = useState<any | null>(null);
+  const [data, setData] = useState<any | null>(options);
 
-  useEffect(() => {
-    setData(options);
-  }, [options]);
+  // useEffect(() => {
+  //   setData(options);
+  // }, [options]);
 
   return (
     <>
@@ -45,7 +45,7 @@ const TabSelect = ({ options, onChange }: any) => {
                     return { ...prev, chips: data };
                   });
                   if (onChange) {
-                    onChange(el);
+                    onChange(el, chipIndex);
                   }
                 }}
                 className={`rounded-[6px]  hover:bg-[#F9FAFB] dark:hover:bg-[#222222] dark:text-inherit border p-[9px_17px]`}
