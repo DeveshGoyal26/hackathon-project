@@ -159,7 +159,7 @@ const Index = () => {
 
   return (
     <main
-      className={`flex max-h-screen relative overflow-hidden flex-col justify-between ${inter.className}`}
+      className={`flex flex-col md:max-h-screen relative overflow-hidden justify-between ${inter.className}`}
     >
       <div
         className="max-h-[64px] bg-white dark:bg-black sticky z-[3] top-0 py-[20px] px-[16px] md:px-[30px] flex items-center justify-between"
@@ -232,8 +232,8 @@ const Index = () => {
         </button>
       </div>
 
-      <div className="w-full flex items-start justify-between max-w-[1440px] mx-auto">
-        <div className="hidden md:flex flex-1 w-full min-w-[40%] min-h-screen border-r">
+      <div className="w-full flex flex-col md:flex-row items-start justify-between max-w-[1440px] mx-auto">
+        <div className=" md:flex flex-1 w-full min-w-[40%] min-h-screen border-r">
           <SideNav
             activeTab={activeTab}
             setActiveTab={setActiveTab}
