@@ -11,20 +11,17 @@ import CreatableSelect from "react-select/creatable";
 import { Tooltip } from "flowbite-react";
 
 const SignupSchema = Yup.object().shape({
-  CourseSubject: Yup.string().required("Required"),
-  CourseDuration: Yup.string().required("Required"),
-  CourseType: Yup.string().required("Required"),
-  TargetAudience: Yup.string().required("Required"),
-  SpecificCourseGoals: Yup.string().required("Required"),
-  CurrentSkillLevel: Yup.string().required("Required"),
-  PriorKnowledge: Yup.string().required("Required"),
-  // CurriculumPlan: Yup.string().required("Required"),
+  CourseSubject: Yup.string(),
+  CourseDuration: Yup.string(),
+  CourseType: Yup.string(),
+  TargetAudience: Yup.string(),
+  SpecificCourseGoals: Yup.string(),
+  CurrentSkillLevel: Yup.string(),
+  PriorKnowledge: Yup.string(),
+  // CurriculumPlan: Yup.string(),
 });
 
-const CoursePlanForm = ({
-  setIsLoading,
-  setUserData,
-}: any) => {
+const CoursePlanForm = ({ setIsLoading, setUserData }: any) => {
   const { isDarkMode }: { isDarkMode: boolean } = useContext(ThemeContext);
 
   const courseFor = {

@@ -10,20 +10,17 @@ import TabSelect from "./TabSelect";
 import { Tooltip } from "flowbite-react";
 
 const SignupSchema = Yup.object().shape({
-  CourseType: Yup.string().required("Required"),
-  LearningObjectives: Yup.string().required("Required"),
-  CoursePlan: Yup.string().required("Required"),
-  SessionDuration: Yup.string().required("Required"),
-  TeachingMode: Yup.string().required("Required"),
-  LearnerProfile: Yup.string().required("Required"),
-  RealWorldContexts: Yup.string().required("Required"),
-  CourseComplexityLevel: Yup.string().required("Required"),
+  CourseType: Yup.string(),
+  LearningObjectives: Yup.string(),
+  CoursePlan: Yup.string(),
+  SessionDuration: Yup.string(),
+  TeachingMode: Yup.string(),
+  LearnerProfile: Yup.string(),
+  RealWorldContexts: Yup.string(),
+  CourseComplexityLevel: Yup.string(),
 });
 
-const CoursePlanForm = ({
-  setIsLoading,
-  setUserData,
-}: any) => {
+const CoursePlanForm = ({ setIsLoading, setUserData }: any) => {
   const { isDarkMode }: { isDarkMode: boolean } = useContext(ThemeContext);
 
   const expertiseLevel = {
