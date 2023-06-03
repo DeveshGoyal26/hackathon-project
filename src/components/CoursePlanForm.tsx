@@ -27,8 +27,8 @@ const CoursePlanForm = ({ setIsLoading, setUserData }: any) => {
   const courseFor = {
     label: "Who is the course for?",
     chips: [
-      { label: "Students", value: "students", active: false },
-      { label: "Freshers", value: "freshers", active: false },
+      { label: "Undergrads", value: "students", active: false },
+      { label: "Graduates", value: "freshers", active: false },
       {
         label: "Experienced Professionals",
         value: "experienced professionals",
