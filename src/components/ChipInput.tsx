@@ -55,6 +55,9 @@ const ChipInput = ({ label, chipLabel, options, onChange }: any) => {
       ...provided,
       color: "inherit",
       boxShadow: "none",
+      "&>input": {
+        background: "transparent !important",
+      },
       "&>input:focus": {
         boxShadow: "none",
       },

@@ -47,7 +47,7 @@ const CoursePlanForm = ({
 
   const duration = [
     { value: "1 hour", label: "1 hour" },
-    { value: "2 hours", label: "1 hours" },
+    { value: "2 hours", label: "2 hours" },
     { value: "4 hours", label: "3 hours" },
     { value: "6 hours", label: "6 hours" },
     { value: "10 hours", label: "10 hours" },
@@ -350,7 +350,7 @@ const CoursePlanForm = ({
                   <input
                     type="text"
                     name="CourseComplexityLevel"
-                    placeholder="Enter Learner Profile (Eg: beginner, intermediate, or advanced etc)"
+                    placeholder="Enter Course Complexity Level (Eg: simple, moderate etc)"
                     className="w-full min-h-[42px] px-[13px] py-[9px] rounded-[6px] border border-[#D1D5DB] mt-[8px] placeholder:text-[#6B7280] dark:placeholder:text-inherit"
                     style={{ boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)" }}
                     onChange={(e: any) => {

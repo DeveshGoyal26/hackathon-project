@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import * as Yup from "yup";
 import ChipInput from "./ChipInput";
 import TabSelect from "./TabSelect";
-import Select from "react-select";
+import CreatableSelect from "react-select";
 
 const SignupSchema = Yup.object().shape({
   CourseSubject: Yup.string().required("Required"),
@@ -223,7 +223,8 @@ const CoursePlanForm = ({
                     Course Type
                   </label>
 
-                  <Select
+                  <CreatableSelect
+                    isClearable
                     name="CourseType"
                     options={[
                       { value: "Outcome Based", label: "Outcome Based" },
@@ -237,6 +238,9 @@ const CoursePlanForm = ({
                         ...provided,
                         color: "inherit",
                         boxShadow: "none",
+                        "&>input": {
+                          background: "transparent !important",
+                        },
                         "&>input:focus": {
                           boxShadow: "none",
                         },
@@ -258,6 +262,23 @@ const CoursePlanForm = ({
                         ...provided,
                         color: isDarkMode ? "inherit" : "#6B7280", // Set the desired placeholder color here
                       }),
+                      menu: (provided: any) => {
+                        return {
+                          ...provided,
+                          backgroundColor: "field",
+                          color: "inherit",
+                          borderRadius: "12px",
+                          overflow: "hidden",
+                        };
+                      },
+                      option: (provided: any) => {
+                        return {
+                          ...provided,
+                          "&:hover": {
+                            color: isDarkMode ? "black" : "white",
+                          },
+                        };
+                      },
                     }}
                     onChange={(data) => {
                       setFieldValue("CourseType", data?.value);

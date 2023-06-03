@@ -42,3 +42,9 @@ html.dark {
     opacity: 0;
   }
 }
+
+input,
+textarea {
+  background: field !important;
+  color: inherit;
+}
