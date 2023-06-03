@@ -11,9 +11,6 @@ const SideNav = ({
   setActiveTab,
 }: any) => {
   const { isDarkMode }: { isDarkMode: boolean } = useContext(ThemeContext);
-  const [handleSubmit, setHandleSubmit] = useState<any>(() => {
-    console.log("handleSubmit");
-  });
 
   const curriculumPlan = {
     label: "What type of curriculum plan?",
@@ -49,7 +46,6 @@ const SideNav = ({
               <CoursePlanForm
                 setUserData={setUserData}
                 setIsLoading={setIsLoading}
-                setHandleSubmit={setHandleSubmit}
               />
               <div className="h-[400px] flex-shrink-0"></div>
             </>
@@ -58,7 +54,6 @@ const SideNav = ({
               <DayPlanForm
                 setUserData={setUserData}
                 setIsLoading={setIsLoading}
-                setHandleSubmit={setHandleSubmit}
               />
               <div className="h-[400px] flex-shrink-0"></div>
             </>
@@ -66,7 +61,13 @@ const SideNav = ({
         </div>
       </div>
 
-      <div className="sticky bottom-0 py-[8px] px-[20px] bg-white dark:bg-black">
+      <div
+        className="sticky bottom-0 py-[8px] px-[20px] bg-white dark:bg-black"
+        style={{
+          boxShadow:
+            "0px 0px 25px -5px rgba(0, 0, 0, 0.1), 0px 20px 25px -5px rgba(0, 0, 0, 0.1), 0px 0px 10px -5px rgba(0, 0, 0, 0.04)",
+        }}
+      >
         <button
           form="my-form"
           type="submit"

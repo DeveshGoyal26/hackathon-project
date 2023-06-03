@@ -1,7 +1,8 @@
 import { ThemeContext } from "@/context/themeContext";
+import { Tooltip } from "flowbite-react";
 import React, { useContext, useEffect, useState } from "react";
 
-const TabSelect = ({ options, onChange }: any) => {
+const TabSelect = ({ options, onChange, tooltipInfo }: any) => {
   const isDarkMode = useContext(ThemeContext);
   const [data, setData] = useState<any | null>(options);
 
@@ -11,8 +12,16 @@ const TabSelect = ({ options, onChange }: any) => {
 
   return (
     <>
-      <label className="mt-[24px] text-sm leading-5 font-medium text-[#374151] dark:text-inherit">
+      <label
+        className="flex items-center gap-[3px] mt-[24px] text-sm leading-5 font-medium text-[#374151] dark:text-inherit"
+        htmlFor="language"
+      >
         {data?.label ? data?.label : "Label"}
+        {tooltipInfo && (
+          <Tooltip content={tooltipInfo} className="max-w-[300px]">
+            <img src="/img/chat/info.svg" alt="info" />
+          </Tooltip>
+        )}
       </label>
 
       <div className="flex flex-wrap mt-[8px] gap-[16px]">

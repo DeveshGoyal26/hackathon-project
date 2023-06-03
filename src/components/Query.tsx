@@ -4,14 +4,8 @@ import React, { useContext, useEffect, useRef } from "react";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import useClipboard from "react-use-clipboard";
 import remarkGfm from "remark-gfm";
-import {
-  PDFDownloadLink,
-  Document,
-  Page,
-  Text,
-  StyleSheet,
-  View,
-} from "@react-pdf/renderer";
+
+import { Tooltip } from "flowbite-react";
 import jsPDF from "jspdf";
 import { toast } from "react-toastify";
 import { ThemeContext } from "@/context/themeContext";
@@ -129,56 +123,52 @@ const Query = ({
               </div>
 
               <div className=" sticky top-[10px] h-full flex flex-col gap-[16px] opacity-0 transition-opacity delay-200 group-hover:opacity-[1]">
-                <button
-                  onClick={handleGeneratePdf}
-                  className="text-[#6B7280] dark:text-white"
-                >
-                  <ShareIcon />
-                </button>
-                <button
-                  onClick={() => {
-                    toast("Copied to clipboard", {
-                      position: "top-right",
-                      autoClose: 5000,
-                      type: "success",
-                      hideProgressBar: false,
-                      pauseOnHover: false,
-                      closeOnClick: true,
-                      draggable: true,
-                      theme: isDarkMode ? "dark" : "light",
-                    });
-                    setCopied();
-                  }}
-                  data-tooltip-target="tooltip-default"
-                  className="text-[#6B7280] dark:text-white"
-                >
-                  {isCopied ? (
-                    <svg
-                      stroke="currentColor"
-                      fill="none"
-                      stroke-width="2"
-                      viewBox="0 0 24 24"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      className="h-4 w-4"
-                      height="1em"
-                      width="1em"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
-                  ) : (
-                    <ClipBoardIcon />
-                  )}
-                </button>
-                <div
-                  id="tooltip-default"
-                  role="tooltip"
-                  className="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
-                >
-                  Tooltip content
-                  <div className="tooltip-arrow" data-popper-arrow></div>
-                </div>
+                <Tooltip content="PDF">
+                  <button
+                    onClick={handleGeneratePdf}
+                    className="text-[#6B7280] dark:text-white"
+                  >
+                    <ShareIcon />
+                  </button>
+                </Tooltip>
+                <Tooltip content="Copy">
+                  <button
+                    onClick={() => {
+                      toast("Copied to clipboard", {
+                        position: "top-right",
+                        autoClose: 5000,
+                        type: "success",
+                        hideProgressBar: false,
+                        pauseOnHover: false,
+                        closeOnClick: true,
+                        draggable: true,
+                        theme: isDarkMode ? "dark" : "light",
+                      });
+                      setCopied();
+                    }}
+                    data-tooltip="This is a tooltip"
+                    className="fb-tooltip text-[#6B7280] dark:text-white"
+                  >
+                    {isCopied ? (
+                      <svg
+                        stroke="currentColor"
+                        fill="none"
+                        stroke-width="2"
+                        viewBox="0 0 24 24"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        className="h-4 w-4"
+                        height="1em"
+                        width="1em"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                      </svg>
+                    ) : (
+                      <ClipBoardIcon />
+                    )}
+                  </button>
+                </Tooltip>
               </div>
             </div>
           </div>
