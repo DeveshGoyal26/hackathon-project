@@ -9,7 +9,7 @@ const PromptInput = ({
 }: any) => {
   return (
     <div
-      className="px-[16px] py-[24px] text-center sticky bottom-[0px] bg-white md:dark:bg-inherit mt-[60px]"
+      className="px-[16px] py-[24px] text-center sticky bottom-[0px] bg-white dark:bg-black md:mt-[60px]"
       style={{
         boxShadow:
           "0px 0px 25px -5px rgba(0, 0, 0, 0.1), 0px 20px 25px -5px rgba(0, 0, 0, 0.1), 0px 0px 10px -5px rgba(0, 0, 0, 0.04)",
