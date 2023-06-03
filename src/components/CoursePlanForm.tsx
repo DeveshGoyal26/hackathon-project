@@ -24,8 +24,6 @@ const SignupSchema = Yup.object().shape({
 const CoursePlanForm = ({
   setIsLoading,
   setUserData,
-  setHandleSubmit,
-  ref,
 }: any) => {
   const { isDarkMode }: { isDarkMode: boolean } = useContext(ThemeContext);
 
