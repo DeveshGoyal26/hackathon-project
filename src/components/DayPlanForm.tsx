@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import * as Yup from "yup";
 import ChipInput from "./ChipInput";
 import TabSelect from "./TabSelect";
+import { Tooltip } from "flowbite-react";
 
 const SignupSchema = Yup.object().shape({
   CourseType: Yup.string().required("Required"),
@@ -163,6 +164,7 @@ const CoursePlanForm = ({
                 <div className="mt-[24px]">
                   <ChipInput
                     label={"Course Type"}
+                    tooltipInfo="This helps to set the context for the type of content to be generated. Examples include programming languages (Java, JavaScript, Python, etc.), databases (SQL, MongoDB, etc.), frameworks (Spring Boot, React, Node.js, AngularJS, etc.)."
                     options={languages}
                     onChange={(data: any) => {
                       setFieldValue(
@@ -187,6 +189,7 @@ const CoursePlanForm = ({
                 <div className="mt-[24px]">
                   <ChipInput
                     label={"Session Duration"}
+                    tooltipInfo="The estimated time that will be spent on teaching and learning during the session. This will influence the depth of coverage for each topic and the number of activities or tasks."
                     options={duration}
                     onChange={(data: any) => {
                       setFieldValue(
@@ -210,10 +213,16 @@ const CoursePlanForm = ({
 
                 <div className="mt-[24px]">
                   <label
-                    className="text-sm leading-5 font-medium text-[#374151] dark:text-inherit"
+                    className="flex items-center gap-[3px] text-sm leading-5 font-medium text-[#374151] dark:text-inherit"
                     htmlFor="LearningObjectives"
                   >
                     Learning Objectives
+                    <Tooltip
+                      content={`These would be the specific objectives or topics for the day's session. For instance, "Data Types and Operators in SQL" or "Introduction to React Hooks".`}
+                      className="max-w-[300px]"
+                    >
+                      <img src="/img/chat/info.svg" alt="info" />
+                    </Tooltip>
                   </label>
 
                   <input
@@ -235,10 +244,16 @@ const CoursePlanForm = ({
 
                 <div className="mt-[24px]">
                   <label
-                    className="text-sm leading-5 font-medium text-[#374151] dark:text-inherit"
+                    className="flex items-center gap-[3px] text-sm leading-5 font-medium text-[#374151] dark:text-inherit"
                     htmlFor="CourseOutcome"
                   >
                     Course Plan
+                    <Tooltip
+                      content={`If available, this will provide a broader context for the day's session, giving an understanding of what has been covered before and what will be covered in future sessions. This allows for better continuity and relevance in the lessons.`}
+                      className="max-w-[300px]"
+                    >
+                      <img src="/img/chat/info.svg" alt="info" />
+                    </Tooltip>
                   </label>
 
                   <input
@@ -260,10 +275,16 @@ const CoursePlanForm = ({
 
                 <div className="mt-[24px] flex flex-col">
                   <label
-                    className="text-sm leading-5 font-medium text-[#374151] dark:text-inherit"
+                    className="flex items-center gap-[3px] text-sm leading-5 font-medium text-[#374151] dark:text-inherit"
                     htmlFor="TeachingMode"
                   >
                     Teaching Mode
+                    <Tooltip
+                      content={`This could be offline (classroom), online (live sessions), or self-paced online learning. This will influence the design of the tasks and interaction points in the day plan.`}
+                      className="max-w-[300px]"
+                    >
+                      <img src="/img/chat/info.svg" alt="info" />
+                    </Tooltip>
                   </label>
 
                   <input
@@ -286,6 +307,9 @@ const CoursePlanForm = ({
                 <div className="mt-[24px]">
                   {expertiseLevel && (
                     <TabSelect
+                      tooltipInfo={
+                        "Understanding the target audience is key to tailoring the content appropriately. Input parameters here could be beginner, intermediate, or advanced."
+                      }
                       options={expertiseLevel}
                       onChange={(data: any) => {
                         setFieldValue("LearnerProfile", data.value);
@@ -311,6 +335,9 @@ const CoursePlanForm = ({
 
                 <div className="mt-[24px]">
                   <ChipInput
+                    tooltipInfo={
+                      "Any specific industries or companies that you would like the lessons to refer to for real-world examples. Examples could be tech companies like Uber, Swiggy, or traditional sectors like banking, healthcare, etc."
+                    }
                     label={"Real-World Contexts"}
                     options={RealWorldExamples}
                     onChange={(data: any) => {
@@ -337,6 +364,9 @@ const CoursePlanForm = ({
                 <div className="mt-[24px]">
                   {CourseComplexityLevelTabs && (
                     <TabSelect
+                      tooltipInfo={
+                        "This gives an indication of how challenging the tasks and assignments should be. This could be simple, moderate, or complex."
+                      }
                       options={CourseComplexityLevelTabs}
                       onChange={(data: any) => {
                         setFieldValue("CourseComplexityLevel", data.value);

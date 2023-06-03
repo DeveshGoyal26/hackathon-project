@@ -2,12 +2,13 @@ import { ThemeContext } from "@/context/themeContext";
 import { axiosErrorHandler } from "@/util/error";
 import axios from "axios";
 import { Form, Formik } from "formik";
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { toast } from "react-toastify";
 import * as Yup from "yup";
 import ChipInput from "./ChipInput";
 import TabSelect from "./TabSelect";
-import CreatableSelect from "react-select";
+import CreatableSelect from "react-select/creatable";
+import { Tooltip } from "flowbite-react";
 
 const SignupSchema = Yup.object().shape({
   CourseSubject: Yup.string().required("Required"),
@@ -184,6 +185,7 @@ const CoursePlanForm = ({
                           .join(", ")
                       );
                     }}
+                    tooltipInfo="What is the subject of the course? (e.g., Python, JavaScript, Node.js, Spring Boot, SQL, MongoDB, Angular.js, etc.)"
                   />
                   {errors.CourseSubject && touched.CourseSubject ? (
                     <p className="text-[#d61e27] mt-[8px]">
@@ -208,6 +210,7 @@ const CoursePlanForm = ({
                           .join(", ")
                       );
                     }}
+                    tooltipInfo="How long is the course going to be? Please provide the duration in weeks or months."
                   />
                   {errors.CourseDuration && touched.CourseDuration ? (
                     <p className="text-[#d61e27] mt-[8px]">
@@ -218,10 +221,18 @@ const CoursePlanForm = ({
 
                 <div className="mt-[24px]">
                   <label
-                    className="text-sm leading-5 font-medium text-[#374151] dark:text-inherit"
+                    className="flex items-center gap-[3px] text-sm leading-5 font-medium text-[#374151] dark:text-inherit"
                     htmlFor="CourseType"
                   >
                     Course Type
+                    <Tooltip
+                      className="max-w-[300px]"
+                      content={
+                        "Is this course outcome-based (focused on specific results like placements or achieving a certain skill level) or experience-based (focused on enriching the learning journey and broad pedagogical exploration)?"
+                      }
+                    >
+                      <img src="/img/chat/info.svg" alt="info" />
+                    </Tooltip>
                   </label>
 
                   <CreatableSelect
@@ -276,8 +287,14 @@ const CoursePlanForm = ({
                         return {
                           ...provided,
                           "&:hover": {
-                            color: isDarkMode ? "black" : "white",
+                            color: isDarkMode ? "black" : "auto",
                           },
+                        };
+                      },
+                      singleValue: (provided: any) => {
+                        return {
+                          ...provided,
+                          color: "inherit",
                         };
                       },
                     }}
@@ -289,10 +306,18 @@ const CoursePlanForm = ({
 
                 <div className="mt-[24px] flex flex-col">
                   <label
-                    className="text-sm leading-5 font-medium text-[#374151] dark:text-inherit"
+                    className="flex items-center gap-[3px] text-sm leading-5 font-medium text-[#374151] dark:text-inherit"
                     htmlFor="CourseOutcome"
                   >
                     Course Outcome
+                    <Tooltip
+                      className="max-w-[300px]"
+                      content={
+                        "What specific outcomes do you expect from this course? (e.g., placements, skill development, preparation for a specific role, etc.)"
+                      }
+                    >
+                      <img src="/img/chat/info.svg" alt="info" />
+                    </Tooltip>
                   </label>
 
                   <input
@@ -314,10 +339,18 @@ const CoursePlanForm = ({
 
                 <div className="mt-[24px] flex flex-col">
                   <label
-                    className="text-sm leading-5 font-medium text-[#374151] dark:text-inherit"
+                    className="flex items-center gap-[3px] text-sm leading-5 font-medium text-[#374151] dark:text-inherit"
                     htmlFor="CourseOutcome"
                   >
                     Prior Knowledge
+                    <Tooltip
+                      className="max-w-[300px]"
+                      content={
+                        "What prior knowledge does the course taker have? (Eg: Html, React, etc)"
+                      }
+                    >
+                      <img src="/img/chat/info.svg" alt="info" />
+                    </Tooltip>
                   </label>
 
                   <input
@@ -340,6 +373,9 @@ const CoursePlanForm = ({
                 <div className="mt-[24px]">
                   {courseFor && (
                     <TabSelect
+                      tooltipInfo={
+                        "Who is the target audience for this course? (e.g., students, freshers, experienced professionals, etc.) What is their current skill level and what are their prior knowledge expectations for this course?"
+                      }
                       options={courseFor}
                       onChange={(data: any) => {
                         setFieldValue("TargetAudience", data.value);
@@ -349,7 +385,7 @@ const CoursePlanForm = ({
                   <input
                     type="text"
                     name="CourseOutcome"
-                    placeholder="Enter Target Audience (Eg: Html, React, etc)"
+                    placeholder="Enter Target Audience (Eg: students, freshers etc)"
                     className="w-full min-h-[42px] px-[13px] py-[9px] rounded-[6px] border border-[#D1D5DB] mt-[8px] placeholder:text-[#6B7280] dark:placeholder:text-inherit"
                     style={{ boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)" }}
                     onChange={(e: any) => {
@@ -366,6 +402,9 @@ const CoursePlanForm = ({
                 <div className="mt-[24px]">
                   {expertiseLevel && (
                     <TabSelect
+                      tooltipInfo={
+                        "Who is the skill level of the target audience for this course? (e.g., Intermediate, Beginner etc.)"
+                      }
                       options={expertiseLevel}
                       onChange={(data: any) => {
                         setFieldValue("CurrentSkillLevel", data.value);
@@ -375,7 +414,7 @@ const CoursePlanForm = ({
                   <input
                     type="text"
                     name="CourseOutcome"
-                    placeholder="Enter Current Skill Level (Eg: Html, React, etc)"
+                    placeholder="Enter Current Skill Level (Eg: Intermediate, Beginner, etc)"
                     className="w-full min-h-[42px] px-[13px] py-[9px] rounded-[6px] border border-[#D1D5DB] mt-[8px] placeholder:text-[#6B7280] dark:placeholder:text-inherit"
                     style={{ boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)" }}
                     onChange={(e: any) => {

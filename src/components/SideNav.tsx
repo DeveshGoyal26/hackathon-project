@@ -66,7 +66,13 @@ const SideNav = ({
         </div>
       </div>
 
-      <div className="sticky bottom-0 py-[8px] px-[20px] bg-white dark:bg-black">
+      <div
+        className="sticky bottom-0 py-[8px] px-[20px] bg-white dark:bg-black"
+        style={{
+          boxShadow:
+            "0px 0px 25px -5px rgba(0, 0, 0, 0.1), 0px 20px 25px -5px rgba(0, 0, 0, 0.1), 0px 0px 10px -5px rgba(0, 0, 0, 0.04)",
+        }}
+      >
         <button
           form="my-form"
           type="submit"

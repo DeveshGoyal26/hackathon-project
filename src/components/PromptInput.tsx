@@ -9,11 +9,13 @@ const PromptInput = ({
 }: any) => {
   return (
     <div
-      className="px-[16px] text-center sticky bottom-[0px] pb-[40px] mt-[60px]"
+      className="px-[16px] py-[24px] text-center sticky bottom-[0px] bg-white md:dark:bg-inherit mt-[60px]"
       style={{
-        background: `linear-gradient(180deg,rgba(53,55,64,0),${
-          isDarkMode ? "#121212" : "#f0efef"
-        } 58.85%)`,
+        boxShadow:
+          "0px 0px 25px -5px rgba(0, 0, 0, 0.1), 0px 20px 25px -5px rgba(0, 0, 0, 0.1), 0px 0px 10px -5px rgba(0, 0, 0, 0.04)",
+        // background: `linear-gradient(180deg,rgba(53,55,64,0),${
+        //   isDarkMode ? "#121212" : "#f0efef"
+        // } 58.85%)`,
       }}
     >
       <form
@@ -27,6 +29,7 @@ const PromptInput = ({
           name="prompt"
           placeholder="Type your prompt here..."
           value={prompt}
+          rows={1}
           onChange={(e) => {
             setPrompt(e.target.value);
           }}
@@ -36,7 +39,7 @@ const PromptInput = ({
           //     handleSubmit();
           //   }
           // }}
-          className="p-[1rem] pr-[48px] min-h-[58px] text-inherit rounded-md w-full border-neutral-600 transition-colors hover:border-gray-300"
+          className=" pr-[48px] min-h-[58px] text-inherit rounded-md w-full border-[#D1D5DB] transition-colors hover:border-gray-300"
         />
 
         <div className="absolute right-[.75rem] bottom-[.75rem]">

@@ -1,4 +1,5 @@
 import { ThemeContext } from "@/context/themeContext";
+import { Tooltip } from "flowbite-react";
 import React, {
   KeyboardEventHandler,
   useCallback,
@@ -24,7 +25,13 @@ const createOption = (label: string, value: string) => ({
 
 let selectedSuggestedOptions = 0;
 
-const ChipInput = ({ label, chipLabel, options, onChange }: any) => {
+const ChipInput = ({
+  tooltipInfo,
+  label,
+  chipLabel,
+  options,
+  onChange,
+}: any) => {
   const { isDarkMode }: { isDarkMode: boolean } = useContext(ThemeContext);
   const [filterData, setFilterData] = useState<any>(null);
   const [inputValue, setInputValue] = React.useState("");
@@ -118,10 +125,15 @@ const ChipInput = ({ label, chipLabel, options, onChange }: any) => {
     <>
       <div className="flex flex-col mt-[24px]">
         <label
-          className="text-sm leading-5 font-medium text-[#374151] dark:text-inherit"
+          className="text-sm flex items-center gap-[3px] leading-5 font-medium text-[#374151] dark:text-inherit"
           htmlFor="language"
         >
           {label ? label : "Label"}
+          {tooltipInfo && (
+            <Tooltip content={tooltipInfo} className="max-w-[300px]">
+              <img src="/img/chat/info.svg" alt="info" />
+            </Tooltip>
+          )}
         </label>
 
         <CreatableSelect
