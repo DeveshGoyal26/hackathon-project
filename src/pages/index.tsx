@@ -22,11 +22,7 @@ const Index = () => {
   const { isDarkMode, setIsDarkMode }: any = useContext(ThemeContext);
 
   const handleSubmit = async () => {
-    // console.log(
-    //   `${process.env.NEXT_PUBLIC_BACKEND_API_URL?.replace(/\/?$/, "")}${
-    //     activeTab === 0 ? "/lessonplanquery" : "/dayplanquery"
-    //   }`
-    // );
+    setPrompt("");
     setIsLoading(true);
     try {
       const res = await axios.post(
@@ -73,7 +69,7 @@ const Index = () => {
           type: "error",
           hideProgressBar: false,
           closeOnClick: true,
-          pauseOnHover: true,
+          pauseOnHover: false,
           draggable: true,
           theme: isDarkMode ? "dark" : "light",
         });
@@ -84,7 +80,7 @@ const Index = () => {
           type: "error",
           hideProgressBar: false,
           closeOnClick: true,
-          pauseOnHover: true,
+          pauseOnHover: false,
           draggable: true,
           theme: isDarkMode ? "dark" : "light",
         });

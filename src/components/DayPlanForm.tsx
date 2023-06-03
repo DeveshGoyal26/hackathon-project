@@ -2,12 +2,11 @@ import { ThemeContext } from "@/context/themeContext";
 import { axiosErrorHandler } from "@/util/error";
 import axios from "axios";
 import { Form, Formik } from "formik";
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { toast } from "react-toastify";
 import * as Yup from "yup";
 import ChipInput from "./ChipInput";
 import TabSelect from "./TabSelect";
-import Select from "react-select";
 
 const SignupSchema = Yup.object().shape({
   CourseType: Yup.string().required("Required"),
@@ -127,7 +126,7 @@ const CoursePlanForm = ({
               type: "error",
               hideProgressBar: false,
               closeOnClick: true,
-              pauseOnHover: true,
+              pauseOnHover: false,
               draggable: true,
               theme: isDarkMode ? "dark" : "light",
             });
@@ -138,7 +137,7 @@ const CoursePlanForm = ({
               type: "error",
               hideProgressBar: false,
               closeOnClick: true,
-              pauseOnHover: true,
+              pauseOnHover: false,
               draggable: true,
               theme: isDarkMode ? "dark" : "light",
             });
@@ -157,9 +156,6 @@ const CoursePlanForm = ({
         handleSubmit,
       }) => {
         // console.log("errors:", errors);
-        useEffect(() => {
-          setHandleSubmit(() => handleSubmit);
-        }, []);
         return (
           <Form id="my-form" className="max-h-screen">
             <div className="max-h-screen">

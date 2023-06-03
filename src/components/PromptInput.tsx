@@ -26,6 +26,7 @@ const PromptInput = ({
         <textarea
           name="prompt"
           placeholder="Type your prompt here..."
+          value={prompt}
           onChange={(e) => {
             setPrompt(e.target.value);
           }}
