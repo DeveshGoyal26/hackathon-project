@@ -27,7 +27,7 @@ const PromptInput = ({
       >
         <textarea
           name="prompt"
-          placeholder="Type your prompt here..."
+          placeholder="Please type your answers here..."
           value={prompt}
           rows={1}
           onChange={(e) => {
