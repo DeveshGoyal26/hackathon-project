@@ -7,8 +7,8 @@ import { axiosErrorHandler } from "@/util/error";
 import SideNav from "@/components/SideNav";
 import Lottie from "react-lottie-player";
 import loadingLottie from "../assets/loading.json";
-import scrollTo from "@/util/scrollTo";
 import { ThemeContext } from "@/context/themeContext";
+import { toast } from "react-toastify";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,16 +18,21 @@ const Index = () => {
   const [userData, setUserData] = useState<any>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [userSlug, setUserSlug] = useState("");
-  const { isDarkMode,setIsDarkMode }: any = useContext(ThemeContext);
+  const [activeTab, setActiveTab] = useState<number>(0);
+  const { isDarkMode, setIsDarkMode }: any = useContext(ThemeContext);
 
   const handleSubmit = async () => {
+    // console.log(
+    //   `${process.env.NEXT_PUBLIC_BACKEND_API_URL?.replace(/\/?$/, "")}${
+    //     activeTab === 0 ? "/lessonplanquery" : "/dayplanquery"
+    //   }`
+    // );
     setIsLoading(true);
     try {
       const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL?.replace(
-          /\/?$/,
-          ""
-        )}/lessonplanquery`,
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL?.replace(/\/?$/, "")}${
+          activeTab === 0 ? "/lessonplanquery" : "/dayplanquery"
+        }`,
         {
           // userData,
           output: prompt,
@@ -36,7 +41,6 @@ const Index = () => {
       );
 
       // let data = res.data;
-
       if (res.data?.["GPT Output"]) {
         setUserData((prev: any) => {
           localStorage.setItem(
@@ -62,37 +66,60 @@ const Index = () => {
     } catch (error) {
       const err: any = axiosErrorHandler(error);
       console.log("err:", err);
+      if (err.massage) {
+        toast(err.massage, {
+          position: "top-right",
+          autoClose: 5000,
+          type: "error",
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: isDarkMode ? "dark" : "light",
+        });
+      } else {
+        toast("Something went wrong", {
+          position: "top-right",
+          autoClose: 5000,
+          type: "error",
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: isDarkMode ? "dark" : "light",
+        });
+      }
     } finally {
       setIsLoading(false);
     }
   };
 
-  const getUserData = async (slug: string) => {
-    try {
-      const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL?.replace(
-          /\/?$/,
-          ""
-        )}/getUserData`,
-        {
-          slug: slug ? slug : "",
-        }
-      );
+  // const getUserData = async (slug: string) => {
+  //   try {
+  //     const res = await axios.post(
+  //       `${process.env.NEXT_PUBLIC_BACKEND_API_URL?.replace(
+  //         /\/?$/,
+  //         ""
+  //       )}/getUserData`,
+  //       {
+  //         slug: slug ? slug : "",
+  //       }
+  //     );
 
-      let data = res.data;
+  //     let data = res.data;
 
-      if (!userSlug) {
-        localStorage.setItem("userSlug", data.slug);
-        setUserSlug(data.slug);
-      }
+  //     if (!userSlug) {
+  //       localStorage.setItem("userSlug", data.slug);
+  //       setUserSlug(data.slug);
+  //     }
 
-      setResponse(data);
-      setUserData([...data.conversation]);
-    } catch (error) {
-      const err: any = axiosErrorHandler(error);
-      console.log("err:", err);
-    }
-  };
+  //     setResponse(data);
+  //     setUserData([...data.conversation]);
+  //   } catch (error) {
+  //     const err: any = axiosErrorHandler(error);
+  //     console.log("err:", err);
+  //   }
+  // };
 
   // Theme
   useEffect(() => {
@@ -121,7 +148,10 @@ const Index = () => {
     if (localdata) {
       setUserData(JSON.parse(localdata));
     }
+  }, []);
 
+  // Scroll to bottom
+  useEffect(() => {
     let objDiv: any = document.getElementById("scorllDiv");
     setTimeout(() => {
       objDiv.parentElement.scrollTo(
@@ -129,7 +159,7 @@ const Index = () => {
         objDiv.childNodes[objDiv.childNodes.length - 2].offsetTop - 120
       );
     }, 1);
-  }, []);
+  }, [userData]);
 
   return (
     <main
@@ -208,7 +238,12 @@ const Index = () => {
 
       <div className="w-full flex items-start justify-between max-w-[1440px] mx-auto">
         <div className="hidden md:flex flex-1 w-full min-w-[40%] min-h-screen border-r">
-          <SideNav setIsLoading={setIsLoading} setUserData={setUserData} />
+          <SideNav
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            setIsLoading={setIsLoading}
+            setUserData={setUserData}
+          />
         </div>
         <div className="w-full min-h-screen">
           <div className="flex flex-wrap justify-between border-b px-[24px] py-[16px]">

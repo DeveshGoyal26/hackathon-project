@@ -54,6 +54,13 @@ const ChipInput = ({ label, chipLabel, options, onChange }: any) => {
     input: (provided: any) => ({
       ...provided,
       color: "inherit",
+      boxShadow: "none",
+      "&>input": {
+        background: "transparent !important",
+      },
+      "&>input:focus": {
+        boxShadow: "none",
+      },
     }),
     control: (provided: any) => ({
       ...provided,
@@ -64,7 +71,7 @@ const ChipInput = ({ label, chipLabel, options, onChange }: any) => {
       color: "inherit",
       borderRadius: "6px",
       boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)",
-      "&:hover'": {
+      "&:hover": {
         border: "1px solid #D1D5DB",
       },
     }),
